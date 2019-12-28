@@ -5,6 +5,7 @@
  */
 package collaborative.todo.list;
 
+import Connection.DataBaseConnection;
 import DAOController.StarategyController;
 import DAOController.ToDoController;
 import DAOController.UserController;
@@ -44,8 +45,8 @@ public class CollaborativeTodoList extends Application {
         stage.setScene(scene);
         stage.show();
 
-        DriverManager.registerDriver(new SQLServerDriver());
-        con = DriverManager.getConnection(Constants.DBUrl);
+        
+        con = DataBaseConnection.getInstance();
         stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
         UserEntity entity = new UserEntity();
         ToDoEntity doEntity = new ToDoEntity();
@@ -55,16 +56,18 @@ public class CollaborativeTodoList extends Application {
         StarategyController starategyController2 = new StarategyController(doController, doEntity);
         starategyController.insert(entity);
         starategyController2.insert(doEntity);
-       /*
-         PreparedStatement stmt = con.prepareStatement("insert into " + Constants.TableNames.userTable + " values (?, ?, ?, ?, ?, ?)");
-        stmt.setString(1, "125324");
-        stmt.setString(2, "toto");
-        stmt.setString(3, "soso");
+       
+        /*
+        PreparedStatement stmt = con.prepareStatement("insert into " + Constants.TableNames.userTable + " values (?, ?, ?, ?, ?, ?)");
+        stmt.setString(1, "12532554");
+        stmt.setString(2, "tujuo");
+        stmt.setString(3, "sohhsgso");
         stmt.setString(4, "sosototo95");
-        stmt.setString(5, "o95@gmail.com");
+        stmt.setString(5, "omnjdnksasdok95@gmail.com");
         stmt.setString(6, "52147895");
         stmt.executeUpdate();
         */
+       
     }
 
     /**
