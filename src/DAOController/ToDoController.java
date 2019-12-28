@@ -5,7 +5,9 @@
  */
 package DAOController;
 
-import DAOs.ToDoDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
+import Entities.TaskEntity;
 import Entities.ToDoEntity;
 import java.util.ArrayList;
 
@@ -13,31 +15,35 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class ToDoController implements ToDoDAO{
+public class ToDoController <ToDoDAO> implements BaseDAO<ToDoEntity> {
 
     @Override
-    public ArrayList<ToDoEntity> findAllIToDos() {
+    public ArrayList<ToDoEntity> findAll() {
+       System.out.println("todo");
+        return new ArrayList<ToDoEntity>();
+    }
+
+    @Override
+    public ToDoEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<ToDoEntity> findToDoById() {
+    public boolean insert(ToDoEntity entity) {
+        System.out.println("todo");
+        return true;
+    }
+
+    @Override
+    public boolean update(ToDoEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean insertToDo(ToDoEntity todo) {
+    public boolean delete(ToDoEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public boolean updateToDo(ToDoEntity todo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean deleteToDo(ToDoEntity todo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
+
 }

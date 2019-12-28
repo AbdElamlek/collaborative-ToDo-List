@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.NotificationEntity;
 import java.util.ArrayList;
 
@@ -12,11 +13,11 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface NotificationDAO {
-    ArrayList<NotificationEntity> findAllINotifications();
-    ArrayList<NotificationEntity> findNotificationById();
-    boolean insertNotification(NotificationEntity notification);
-    boolean updateNotification(NotificationEntity notification);
-    boolean deleteNotification(NotificationEntity notification);
+public interface NotificationDAO extends BaseDAO {
+    ArrayList<BaseEntity> findAll();
+    BaseEntity findById(String id);
+    boolean insert(NotificationEntity notification);
+    boolean update(NotificationEntity notification);
+    boolean delete(NotificationEntity notification);
     
 }

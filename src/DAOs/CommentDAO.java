@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.CommentEntity;
 import java.util.ArrayList;
 
@@ -12,12 +13,12 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface CommentDAO {
+public interface CommentDAO extends BaseDAO{
     
-    ArrayList<CommentEntity> findAllComment();
-    ArrayList<CommentEntity> findCommentById();
-    boolean insertComment(CommentEntity comment);
-    boolean updateComment(CommentEntity comment);
-    boolean deleteComment(CommentEntity comment);
+    ArrayList<BaseEntity> findAll();
+    BaseEntity findById(String id);
+    boolean insert(CommentEntity comment);
+    boolean update(CommentEntity comment);
+    boolean delete(CommentEntity comment);
     
 }

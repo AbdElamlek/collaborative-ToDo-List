@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author Abd-Elmalek
  */
-public class ToDoEntity {
+public class ToDoEntity implements BaseEntity {
     
     private String id;
     private String title;

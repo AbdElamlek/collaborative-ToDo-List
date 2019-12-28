@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class TaskEntity {
+public class TaskEntity implements BaseEntity {
     
     private String id;
     private String decription;

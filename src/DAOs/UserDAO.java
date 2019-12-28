@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.UserEntity;
 import java.util.ArrayList;
 
@@ -12,13 +13,13 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface UserDAO {
+public interface UserDAO extends BaseDAO {
     
-    ArrayList<UserEntity> findAllUsers();
-    ArrayList<UserEntity> findUserById();
+    ArrayList<BaseEntity> findAll();
+    BaseEntity findById(String id);
     ArrayList<UserEntity> findByName();
-    boolean insertUser(UserEntity user);
-    boolean updateUser(UserEntity user);
-    boolean deleteUser(UserEntity user);
+    boolean insert(UserEntity user);
+    boolean update(UserEntity user);
+    boolean delete(UserEntity user);
     
 }

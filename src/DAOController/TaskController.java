@@ -5,7 +5,8 @@
  */
 package DAOController;
 
-import DAOs.TaskDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
 import Entities.TaskEntity;
 import java.util.ArrayList;
 
@@ -13,31 +14,39 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class TaskController implements TaskDAO{
+public class TaskController<TaskDAO> implements BaseDAO<TaskEntity>{
 
     @Override
-    public ArrayList<TaskEntity> findAllITasks() {
+    public ArrayList<TaskEntity> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<TaskEntity> findTaskById() {
+    public TaskEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean insertTask(TaskEntity task) {
+    public boolean insert(TaskEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean updateTask(TaskEntity task) {
+    public boolean update(TaskEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteTask(TaskEntity task) {
+    public boolean delete(TaskEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
+    
+   
+   
     
 }
+
+
+

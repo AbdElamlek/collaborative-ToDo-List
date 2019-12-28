@@ -5,7 +5,8 @@
  */
 package DAOController;
 
-import DAOs.NotificationDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
 import Entities.NotificationEntity;
 import java.util.ArrayList;
 
@@ -13,31 +14,40 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class NotificationController implements NotificationDAO{
+public class NotificationController<NotificationDAO> implements BaseDAO<NotificationEntity>{
 
     @Override
-    public ArrayList<NotificationEntity> findAllINotifications() {
+    public ArrayList<NotificationEntity> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<NotificationEntity> findNotificationById() {
+    public NotificationEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean insertNotification(NotificationEntity notification) {
+    public boolean insert(NotificationEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean updateNotification(NotificationEntity notification) {
+    public boolean update(NotificationEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteNotification(NotificationEntity notification) {
+    public boolean delete(NotificationEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
+
+   
+   
     
 }
+
+
+    
+

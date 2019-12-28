@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.ToDoEntity;
 import java.util.ArrayList;
 
@@ -12,10 +13,10 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface ToDoDAO {
-    ArrayList<ToDoEntity> findAllIToDos();
-    ArrayList<ToDoEntity> findToDoById();
-    boolean insertToDo(ToDoEntity todo);
-    boolean updateToDo(ToDoEntity todo);
-    boolean deleteToDo(ToDoEntity todo);
+public interface ToDoDAO extends BaseDAO {
+    ArrayList<BaseEntity> findAll();
+    BaseEntity findById(String id);
+    boolean insert(ToDoEntity todo);
+    boolean update(ToDoEntity todo);
+    boolean delete(ToDoEntity todo);
 }

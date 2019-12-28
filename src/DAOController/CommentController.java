@@ -5,7 +5,8 @@
  */
 package DAOController;
 
-import DAOs.CommentDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
 import Entities.CommentEntity;
 import java.util.ArrayList;
 
@@ -13,31 +14,34 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class CommentController implements CommentDAO{
+public class CommentController<CommentDAO> implements BaseDAO<CommentEntity>{
 
     @Override
-    public ArrayList<CommentEntity> findAllComment() {
+    public ArrayList<CommentEntity> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<CommentEntity> findCommentById() {
+    public CommentEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean insertComment(CommentEntity comment) {
+    public boolean insert(CommentEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean updateComment(CommentEntity comment) {
+    public boolean update(CommentEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteComment(CommentEntity comment) {
+    public boolean delete(CommentEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+   
+   
     
 }

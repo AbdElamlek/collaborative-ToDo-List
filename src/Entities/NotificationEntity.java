@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Abd-Elmalek
  */
-public class NotificationEntity {
+public class NotificationEntity implements BaseEntity {
     
     private String id;
     private Date time;

@@ -5,7 +5,8 @@
  */
 package DAOController;
 
-import DAOs.UserDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
 import Entities.UserEntity;
 import java.util.ArrayList;
 
@@ -13,36 +14,37 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class UserController implements UserDAO{
+public class UserController <UserDAO> implements BaseDAO<UserEntity>{
 
     @Override
-    public ArrayList<UserEntity> findAllUsers() {
+    public ArrayList<UserEntity> findAll() {
+        System.out.println("user");
+        return new ArrayList<>();
+    }
+
+    @Override
+    public UserEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<UserEntity> findUserById() {
+    public boolean insert(UserEntity entity) {
+       System.out.println("user");
+        return true;
+    }
+
+    @Override
+    public boolean update(UserEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<UserEntity> findByName() {
+    public boolean delete(UserEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public boolean insertUser(UserEntity user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean updateUser(UserEntity user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean deleteUser(UserEntity user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+   
+   
     
 }

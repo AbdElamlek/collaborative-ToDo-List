@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.ItemEntity;
 import java.util.ArrayList;
 
@@ -12,10 +13,10 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface ItemDAO {
-    ArrayList<ItemEntity> findAllItems();
-    ArrayList<ItemEntity> findtemById();
-    boolean insertItem(ItemEntity item);
-    boolean updateItem(ItemEntity item);
-    boolean deleteItem(ItemEntity item);
+public interface ItemDAO extends BaseDAO {
+    ArrayList<BaseEntity> findAll();
+    BaseEntity findById(String id);
+    boolean insert(ItemEntity item);
+    boolean update(ItemEntity item);
+    boolean deleteI(ItemEntity item);
 }

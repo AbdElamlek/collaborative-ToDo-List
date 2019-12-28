@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.RequestEntity;
 import java.util.ArrayList;
 
@@ -12,10 +13,10 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface RequestDAO {
-    ArrayList<RequestEntity> findAllIRequsets();
-    ArrayList<RequestEntity> findRequsetById();
-    boolean insertRequset(RequestEntity request);
-    boolean updateRequset(RequestEntity request);
-    boolean deleteRequset(RequestEntity request);
+public interface RequestDAO extends BaseDAO {
+    ArrayList<BaseEntity> findAll();
+    ArrayList<RequestEntity> findtById(String id);
+    boolean insert(RequestEntity request);
+    boolean update(RequestEntity request);
+    boolean delete(RequestEntity request);
 }

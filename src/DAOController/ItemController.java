@@ -5,7 +5,8 @@
  */
 package DAOController;
 
-import DAOs.ItemDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
 import Entities.ItemEntity;
 import java.util.ArrayList;
 
@@ -13,31 +14,35 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class ItemController implements ItemDAO{
+public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
 
     @Override
-    public ArrayList<ItemEntity> findAllItems() {
+    public ArrayList<ItemEntity> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<ItemEntity> findtemById() {
+    public ItemEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean insertItem(ItemEntity item) {
+    public boolean insert(ItemEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean updateItem(ItemEntity item) {
+    public boolean update(ItemEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteItem(ItemEntity item) {
+    public boolean delete(ItemEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
+   
+   
     
 }

@@ -5,6 +5,11 @@
  */
 package collaborative.todo.list;
 
+import DAOController.StarategyController;
+import DAOController.ToDoController;
+import DAOController.UserController;
+import Entities.ToDoEntity;
+import Entities.UserEntity;
 import Utils.Constants;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 import java.sql.Connection;
@@ -42,8 +47,16 @@ public class CollaborativeTodoList extends Application {
         DriverManager.registerDriver(new SQLServerDriver());
         con = DriverManager.getConnection(Constants.DBUrl);
         stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
-
-        PreparedStatement stmt = con.prepareStatement("insert into " + Constants.TableNames.userTable + " values (?, ?, ?, ?, ?, ?)");
+        UserEntity entity = new UserEntity();
+        ToDoEntity doEntity = new ToDoEntity();
+        UserController controller = new UserController();
+        ToDoController doController = new ToDoController();
+        StarategyController starategyController = new StarategyController(controller, entity);
+        StarategyController starategyController2 = new StarategyController(doController, doEntity);
+        starategyController.insert(entity);
+        starategyController2.insert(doEntity);
+       /*
+         PreparedStatement stmt = con.prepareStatement("insert into " + Constants.TableNames.userTable + " values (?, ?, ?, ?, ?, ?)");
         stmt.setString(1, "125324");
         stmt.setString(2, "toto");
         stmt.setString(3, "soso");
@@ -51,6 +64,7 @@ public class CollaborativeTodoList extends Application {
         stmt.setString(5, "o95@gmail.com");
         stmt.setString(6, "52147895");
         stmt.executeUpdate();
+        */
     }
 
     /**

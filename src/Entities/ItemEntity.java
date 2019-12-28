@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class ItemEntity {
+public class ItemEntity implements BaseEntity {
     
     private String id;
     private String title;

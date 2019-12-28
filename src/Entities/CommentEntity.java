@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Abd-Elmalek
  */
-public class CommentEntity {
+public class CommentEntity implements BaseEntity {
     
     private String id;
     private String messageContent;

@@ -5,7 +5,8 @@
  */
 package DAOController;
 
-import DAOs.RequestDAO;
+import DAOs.BaseDAO;
+import Entities.BaseEntity;
 import Entities.RequestEntity;
 import java.util.ArrayList;
 
@@ -13,31 +14,38 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public class RequestController implements RequestDAO{
+public class RequestController <RequestDAO> implements BaseDAO<RequestEntity>{
 
     @Override
-    public ArrayList<RequestEntity> findAllIRequsets() {
+    public ArrayList<RequestEntity> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<RequestEntity> findRequsetById() {
+    public RequestEntity findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean insertRequset(RequestEntity request) {
+    public boolean insert(RequestEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean updateRequset(RequestEntity request) {
+    public boolean update(RequestEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean deleteRequset(RequestEntity request) {
+    public boolean delete(RequestEntity entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
+   
+   
     
 }
+  
+    
+

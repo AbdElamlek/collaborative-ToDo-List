@@ -5,6 +5,7 @@
  */
 package DAOs;
 
+import Entities.BaseEntity;
 import Entities.TaskEntity;
 import java.util.ArrayList;
 
@@ -12,10 +13,10 @@ import java.util.ArrayList;
  *
  * @author Abd-Elmalek
  */
-public interface TaskDAO {
-    ArrayList<TaskEntity> findAllITasks();
-    ArrayList<TaskEntity> findTaskById();
-    boolean insertTask(TaskEntity task);
-    boolean updateTask(TaskEntity task);
-    boolean deleteTask(TaskEntity task);
+public interface TaskDAO extends BaseDAO {
+    ArrayList<BaseEntity> findAll();
+    BaseEntity findById(String id);
+    boolean insert(TaskEntity task);
+    boolean update(TaskEntity task);
+    boolean delete(TaskEntity task);
 }
