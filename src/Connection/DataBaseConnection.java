@@ -18,23 +18,31 @@ import java.util.logging.Logger;
  * @author Abd-Elmalek
  */
 public class DataBaseConnection {
-     static DriverManager driverManager;
-     static Connection con;
-     static SQLServerDriver sQLServerDriver = new SQLServerDriver();
-     
-  
-    public static final Connection getInstance() {
-         try {
-             driverManager.registerDriver(sQLServerDriver);
-             con = driverManager.getConnection(Constants.DBUrl);
-         } catch (SQLException ex) {
-             Logger.getLogger(DataBaseConnection.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        return con;
+
+    private static DriverManager driverManager;
+    private static Connection connection;
+    private static SQLServerDriver sQLServerDriver = new SQLServerDriver();
+
+    private static DataBaseConnection dataBaseConnection;
+
+    public static Connection getInstance() {
+      
+        if (dataBaseConnection == null) 
+            synchronized(DataBaseConnection.class){
+                if(dataBaseConnection == null)
+                    dataBaseConnection = new DataBaseConnection();
+            }
+        return connection;    
     }
 
-    
+    private DataBaseConnection() {
 
-    
-    
+        try {
+            driverManager.registerDriver(sQLServerDriver);
+            connection = driverManager.getConnection(Constants.DBUrl);
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
