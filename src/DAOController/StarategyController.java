@@ -43,7 +43,7 @@ public class StarategyController<T> implements BaseDAO<T> {
 
     }
 
-    public T findById(String id) {
+    public T findById(int id) {
 
         return (T) baseDAO.findById(id);
     }

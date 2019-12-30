@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public class ToDoEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private String title;
     private Date assignDate;
     private Date deadLineDate;
@@ -25,7 +25,7 @@ public class ToDoEntity implements BaseEntity {
     public ToDoEntity() {
     }
 
-    public ToDoEntity(String id, String title, Date assignDate, Date deadLineDate, String ownerId) {
+    public ToDoEntity(int id, String title, Date assignDate, Date deadLineDate, String ownerId) {
         this.id = id;
         this.title = title;
         this.assignDate = assignDate;
@@ -33,7 +33,7 @@ public class ToDoEntity implements BaseEntity {
         this.ownerId = ownerId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -53,7 +53,7 @@ public class ToDoEntity implements BaseEntity {
         this.ownerId = ownerId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

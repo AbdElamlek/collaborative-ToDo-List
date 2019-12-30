@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public interface CommentDAO extends BaseDAO{
     
     ArrayList<BaseEntity> findAll();
-    BaseEntity findById(String id);
+    BaseEntity findById(int id);
     boolean insert(CommentEntity comment);
     boolean update(CommentEntity comment);
     boolean delete(CommentEntity comment);

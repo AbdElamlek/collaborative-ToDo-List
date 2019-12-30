@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class UserEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private String userName;
@@ -30,7 +30,7 @@ public class UserEntity implements BaseEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String id, String firstName, String lastName, String userName, String email, String password) {
+    public UserEntity(int id, String firstName, String lastName, String userName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,7 +39,7 @@ public class UserEntity implements BaseEntity {
         this.password = password;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -63,7 +63,7 @@ public class UserEntity implements BaseEntity {
         this.password = password;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

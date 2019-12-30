@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface NotificationDAO extends BaseDAO {
     ArrayList<BaseEntity> findAll();
-    BaseEntity findById(String id);
+    BaseEntity findById(int id);
     boolean insert(NotificationEntity notification);
     boolean update(NotificationEntity notification);
     boolean delete(NotificationEntity notification);

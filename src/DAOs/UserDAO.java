@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public interface UserDAO extends BaseDAO {
     
     ArrayList<BaseEntity> findAll();
-    BaseEntity findById(String id);
+    BaseEntity findById(int id);
     ArrayList<UserEntity> findByName();
     boolean insert(UserEntity user);
     boolean update(UserEntity user);

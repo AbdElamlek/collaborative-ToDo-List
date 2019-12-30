@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class TaskEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private String decription;
     private int status;
     private String itemId;
@@ -22,14 +22,14 @@ public class TaskEntity implements BaseEntity {
     public TaskEntity() {
     }
 
-    public TaskEntity(String id, String decription, int status, String itemId) {
+    public TaskEntity(int id, String decription, int status, String itemId) {
         this.id = id;
         this.decription = decription;
         this.status = status;
         this.itemId = itemId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,7 +45,7 @@ public class TaskEntity implements BaseEntity {
         this.itemId = itemId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

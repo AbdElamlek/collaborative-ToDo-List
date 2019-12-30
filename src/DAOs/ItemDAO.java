@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface ItemDAO extends BaseDAO {
     ArrayList<BaseEntity> findAll();
-    BaseEntity findById(String id);
+    BaseEntity findById(int id);
     boolean insert(ItemEntity item);
     boolean update(ItemEntity item);
     boolean deleteI(ItemEntity item);

@@ -22,7 +22,7 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
     }
 
     @Override
-    public ItemEntity findById(String id) {
+    public ItemEntity findById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

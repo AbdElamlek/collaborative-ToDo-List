@@ -22,7 +22,7 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity>{
     }
 
     @Override
-    public TaskEntity findById(String id) {
+    public TaskEntity findById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
