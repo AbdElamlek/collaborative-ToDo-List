@@ -57,16 +57,18 @@ public class CollaborativeTodoList extends Application {
         starategyController.insert(entity);
         starategyController2.insert(doEntity);
        
+        
         /*
-        PreparedStatement stmt = con.prepareStatement("insert into " + Constants.TableNames.userTable + " values (?, ?, ?, ?, ?, ?)");
-        stmt.setString(1, "12532554");
-        stmt.setString(2, "tujuo");
-        stmt.setString(3, "sohhsgso");
-        stmt.setString(4, "sosototo95");
-        stmt.setString(5, "omnjdnksasdok95@gmail.com");
-        stmt.setString(6, "52147895");
+        PreparedStatement stmt = con.prepareStatement("insert into "+Constants.TableNames.userTable+" (firstName,lastName,username,email,password) values ( ?, ?, ?, ?, ?);");
+        System.err.println("insert into "+ Constants.TableNames.userTable +" (firstName,lastName,username,email,password) " + " values ( ?, ?, ?, ?, ?)");
+        stmt.setString(1, "tujuo");
+        stmt.setString(2, "sohhsgso");
+        stmt.setString(3, "sosototo95");
+        stmt.setString(4, "omnjdnksasdok95@gmail.com");
+        stmt.setString(5, "52147895");
         stmt.executeUpdate();
         */
+        
        
     }
 
