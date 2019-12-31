@@ -29,7 +29,7 @@ public class UserController <UserDAO> implements BaseDAO<UserEntity>{
     }
 
     @Override
-    public UserEntity findById(String id) {
+    public UserEntity findById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

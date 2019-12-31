@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class UserEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private String userName;
@@ -23,11 +23,14 @@ public class UserEntity implements BaseEntity {
     private ArrayList<UserEntity> friendList;
     private ArrayList<RequestEntity> requestList;
     private ArrayList<NotificationEntity> notificationList;
+    private ArrayList<TaskEntity> tasksList;
+    private ArrayList<ToDoEntity> todoList;
+    private ArrayList<ToDoEntity> colaboartedList;
 
     public UserEntity() {
     }
 
-    public UserEntity(String id, String firstName, String lastName, String userName, String email, String password) {
+    public UserEntity(int id, String firstName, String lastName, String userName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,7 +39,7 @@ public class UserEntity implements BaseEntity {
         this.password = password;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,7 +63,7 @@ public class UserEntity implements BaseEntity {
         this.password = password;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -115,6 +118,31 @@ public class UserEntity implements BaseEntity {
     public ArrayList<NotificationEntity> getNotificationList() {
         return notificationList;
     }
+
+    public ArrayList<TaskEntity> getTasksList() {
+        return tasksList;
+    }
+
+    public void setTasksList(ArrayList<TaskEntity> tasksList) {
+        this.tasksList = tasksList;
+    }
+
+    public ArrayList<ToDoEntity> getTodoList() {
+        return todoList;
+    }
+
+    public void setTodoList(ArrayList<ToDoEntity> todoList) {
+        this.todoList = todoList;
+    }
+
+    public ArrayList<ToDoEntity> getColaboartedList() {
+        return colaboartedList;
+    }
+
+    public void setColaboartedList(ArrayList<ToDoEntity> colaboartedList) {
+        this.colaboartedList = colaboartedList;
+    }
+    
     
     
     

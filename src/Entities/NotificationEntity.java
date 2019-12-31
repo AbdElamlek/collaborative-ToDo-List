@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class NotificationEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private Date time;
     private String type;
     private String receivedUserId;
@@ -22,7 +22,7 @@ public class NotificationEntity implements BaseEntity {
     public NotificationEntity() {
     }
 
-    public NotificationEntity(String id, Date time, String type, String receivedUserId, String sentUserId) {
+    public NotificationEntity(int id, Date time, String type, String receivedUserId, String sentUserId) {
         this.id = id;
         this.time = time;
         this.type = type;
@@ -30,7 +30,7 @@ public class NotificationEntity implements BaseEntity {
         this.sentUserId = sentUserId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -50,7 +50,7 @@ public class NotificationEntity implements BaseEntity {
         this.sentUserId = sentUserId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface ToDoDAO extends BaseDAO {
     ArrayList<BaseEntity> findAll();
-    BaseEntity findById(String id);
+    BaseEntity findById(int id);
     boolean insert(ToDoEntity todo);
     boolean update(ToDoEntity todo);
     boolean delete(ToDoEntity todo);

@@ -13,20 +13,20 @@ import java.util.Date;
  */
 public class CommentEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private String messageContent;
     private Date time;
 
     public CommentEntity() {
     }
 
-    public CommentEntity(String id, String messageContent, Date time) {
+    public CommentEntity(int id, String messageContent, Date time) {
         this.id = id;
         this.messageContent = messageContent;
         this.time = time;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,7 +38,7 @@ public class CommentEntity implements BaseEntity {
         this.time = time;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

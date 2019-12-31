@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface RequestDAO extends BaseDAO {
     ArrayList<BaseEntity> findAll();
-    ArrayList<RequestEntity> findtById(String id);
+    ArrayList<RequestEntity> findtById(int id);
     boolean insert(RequestEntity request);
     boolean update(RequestEntity request);
     boolean delete(RequestEntity request);

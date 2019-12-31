@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class ItemEntity implements BaseEntity {
     
-    private String id;
+    private int id;
     private String title;
     private String decription;
     private String todoId;
@@ -22,14 +22,14 @@ public class ItemEntity implements BaseEntity {
     public ItemEntity() {
     }
 
-    public ItemEntity(String id, String title, String decription, String todoId) {
+    public ItemEntity(int id, String title, String decription, String todoId) {
         this.id = id;
         this.title = title;
         this.decription = decription;
         this.todoId = todoId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,7 +45,7 @@ public class ItemEntity implements BaseEntity {
         this.todoId = todoId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

@@ -22,7 +22,7 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
     }
 
     @Override
-    public NotificationEntity findById(String id) {
+    public NotificationEntity findById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public interface BaseDAO<T> {
     
     ArrayList<T> findAll();
-    T findById(String id);
+    T findById(int id);
     boolean insert(T entity);
     boolean update(T entity);
     boolean delete(T entity);

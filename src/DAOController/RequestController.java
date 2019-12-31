@@ -22,7 +22,7 @@ public class RequestController <RequestDAO> implements BaseDAO<RequestEntity>{
     }
 
     @Override
-    public RequestEntity findById(String id) {
+    public RequestEntity findById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

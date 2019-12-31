@@ -41,7 +41,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 assignDate = rs.getDate(3);
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
-                //todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId));
+                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,23 +50,22 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
     }
 
     @Override
-    //public ToDoEnity findById(int id){
-    public ToDoEntity findById(String id) {
+    public ToDoEntity findById(int id) {
         String title = "";
         Date assignDate = null;
         Date deadLineDate = null;
         int ownerId = 0;
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo where id=?");
-            //pst.setInt(1, id);
+            pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                //id = rs.getInt(1);
+                id = rs.getInt(1);
                 title = rs.getString(2);
                 assignDate = rs.getDate(3);
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
-                //toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId);
+                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId);
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,7 +81,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
-            //pst.setInt(4, entity.getOwnerId());
+            pst.setInt(4, entity.getOwnerId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +102,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
-            //pst.setInt(4, entity.getOwnerId());
+            pst.setInt(4, entity.getOwnerId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -120,7 +119,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         int rows_affected = 0;
         try {
             PreparedStatement pst = con.prepareStatement("delete from todo where id = ?");
-            //pst.setInt(1, entity.getId());
+            pst.setInt(1, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);

@@ -13,20 +13,21 @@ public class Constants {
     
     public static final String DBUserName = "todolistUser";
     public static final String DBPassword = "root";
-    public static final String DBUrl = "jdbc:sqlserver://localhost:1433;databaseName=todoListDB;user="+DBUserName+";password="+DBPassword;
-    
+    public static final String DBUrl = "jdbc:sqlserver://localhost:1433;databaseName=todoDB;user="+DBUserName+";password="+DBPassword;
+    public static final String schemaName ="[todoDB].[dbo]";    
     
     public class TableNames{
-      public static final String commetTable = "commentTable";
-      public static final String itemTable = "itemTable";
-      public static final String notificationTable = "notificationTable";
-      public static final String requestTable = "requestTable";
-      public static final String taskTable = "taskTable";
-      public static final String toDoTable = "toDoTable";
-      public static final String userTable = "userTable";
-      public static final String user_assignedto_task_Table = "user_assignedto_task_Table";
-      public static final String user_collaborate_todo_Table = "user_collaborate_todo_Table";
-      public static final String user_do_comment_task_Table = "user_do_comment_task_Table";
+      public static final String commetTable = "comment";
+      public static final String itemTable = "item";
+      public static final String notificationTable = "notification";
+      public static final String requestTable = "request";
+      public static final String taskTable = "task";
+      public static final String toDoTable = "todo";
+      public static final String userTable = "[user]";
+      public static final String user_assigned_task_Table = "user_assigned_task";
+      public static final String user_collaborate_todo_Table = "user_collaborate_todo";
+      public static final String user_do_comment_task_Table = "user_do_comment_task";
+      public static final String user_friend_Table = "user_friend";
     }
     
 }
