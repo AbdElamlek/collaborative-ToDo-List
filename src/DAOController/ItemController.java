@@ -65,7 +65,7 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
             preparedStatement = connection.prepareStatement(query);
             
             preparedStatement.setString(1, entity.getTitle());
-            preparedStatement.setString(2, entity.getDescription());
+            preparedStatement.setString(2, entity.getDecription());
             preparedStatement.setInt(3, entity.getTodoId());
             
             return (preparedStatement.executeUpdate() > 0);
@@ -81,7 +81,7 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
             String query = "UPDATE [todoDB].[dbo].[item] SET title = ?, description = ?, todoId = ? WHERE id = ?";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, entity.getTitle());
-            preparedStatement.setString(2, entity.getDescription());
+            preparedStatement.setString(2, entity.getDecription());
             preparedStatement.setInt(3, entity.getTodoId());
             preparedStatement.setInt(4, entity.getId());
             
