@@ -16,13 +16,13 @@ public class TaskEntity implements BaseEntity {
     private int id;
     private String decription;
     private int status;
-    private String itemId;
+    private int itemId;
     private ArrayList<CommentEntity> commentsList;
 
     public TaskEntity() {
     }
 
-    public TaskEntity(int id, String decription, int status, String itemId) {
+    public TaskEntity(int id, String decription, int status, int itemId) {
         this.id = id;
         this.decription = decription;
         this.status = status;
@@ -41,7 +41,7 @@ public class TaskEntity implements BaseEntity {
         this.status = status;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 
@@ -57,7 +57,7 @@ public class TaskEntity implements BaseEntity {
         return status;
     }
 
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 

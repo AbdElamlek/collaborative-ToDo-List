@@ -16,13 +16,13 @@ public class NotificationEntity implements BaseEntity {
     private int id;
     private Date time;
     private String type;
-    private String receivedUserId;
-    private String sentUserId;
+    private int receivedUserId;
+    private int sentUserId;
 
     public NotificationEntity() {
     }
 
-    public NotificationEntity(int id, Date time, String type, String receivedUserId, String sentUserId) {
+    public NotificationEntity(int id, Date time, String type, int receivedUserId, int sentUserId) {
         this.id = id;
         this.time = time;
         this.type = type;
@@ -42,11 +42,11 @@ public class NotificationEntity implements BaseEntity {
         this.type = type;
     }
 
-    public void setReceivedUserId(String receivedUserId) {
+    public void setReceivedUserId(int receivedUserId) {
         this.receivedUserId = receivedUserId;
     }
 
-    public void setSentUserId(String sentUserId) {
+    public void setSentUserId(int sentUserId) {
         this.sentUserId = sentUserId;
     }
 
@@ -62,11 +62,11 @@ public class NotificationEntity implements BaseEntity {
         return type;
     }
 
-    public String getReceivedUserId() {
+    public int getReceivedUserId() {
         return receivedUserId;
     }
 
-    public String getSentUserId() {
+    public int getSentUserId() {
         return sentUserId;
     }
     
