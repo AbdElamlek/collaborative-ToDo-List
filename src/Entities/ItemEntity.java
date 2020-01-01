@@ -16,13 +16,13 @@ public class ItemEntity implements BaseEntity {
     private int id;
     private String title;
     private String decription;
-    private String todoId;
+    private int todoId;
     private ArrayList<TaskEntity> tasksList;
 
     public ItemEntity() {
     }
 
-    public ItemEntity(int id, String title, String decription, String todoId) {
+    public ItemEntity(int id, String title, String decription, int todoId) {
         this.id = id;
         this.title = title;
         this.decription = decription;
@@ -41,7 +41,7 @@ public class ItemEntity implements BaseEntity {
         this.decription = decription;
     }
 
-    public void setTodoId(String todoId) {
+    public void setTodoId(int todoId) {
         this.todoId = todoId;
     }
 
@@ -57,7 +57,7 @@ public class ItemEntity implements BaseEntity {
         return decription;
     }
 
-    public String getTodoId() {
+    public int getTodoId() {
         return todoId;
     }
 
