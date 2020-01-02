@@ -16,14 +16,18 @@ public class CommentEntity implements BaseEntity {
     private int id;
     private String messageContent;
     private Date time;
+    private UserEntity commentOwner;
+    private int commentedTaskId;
 
     public CommentEntity() {
     }
 
-    public CommentEntity(int id, String messageContent, Date time) {
+    public CommentEntity(int id, String messageContent, Date time, UserEntity commentOwner, int commentedTaskId) {
         this.id = id;
         this.messageContent = messageContent;
         this.time = time;
+        this.commentOwner = commentOwner;
+        this.commentedTaskId = commentedTaskId;
     }
 
     public void setId(int id) {
@@ -38,6 +42,10 @@ public class CommentEntity implements BaseEntity {
         this.time = time;
     }
 
+    public void setCommentOwner(UserEntity commentOwner) {
+        this.commentOwner = commentOwner;
+    }
+    
     public int getId() {
         return id;
     }
@@ -50,5 +58,16 @@ public class CommentEntity implements BaseEntity {
         return time;
     }
     
-    
+    public UserEntity getCommentOwner() {
+        return commentOwner;
+    }
+
+    public int getCommentedTaskId() {
+        return commentedTaskId;
+    }
+
+    public void setCommentedTaskId(int commentedTaskId) {
+        this.commentedTaskId = commentedTaskId;
+    }
+
 }

@@ -26,7 +26,7 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
     public ArrayList<ItemEntity> findAll() {
         ArrayList<ItemEntity> items = new ArrayList<ItemEntity>();
         try {
-            String query = "SELECT * FROM item";
+            String query = "SELECT * FROM [todoDB].[dbo].[item]";
             preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
             
@@ -80,6 +80,7 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
         try {
             String query = "UPDATE [todoDB].[dbo].[item] SET title = ?, description = ?, todoId = ? WHERE id = ?";
             preparedStatement = connection.prepareStatement(query);
+            
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getDecription());
             preparedStatement.setInt(3, entity.getTodoId());
@@ -107,7 +108,21 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
         return false;
     }
 
-
+    public ArrayList<ItemEntity> findByTodoId(int todoId){
+        ArrayList<ItemEntity> items = new ArrayList<ItemEntity>();
+        try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[item] WHERE todoId = ?");
+            preparedStatement.setInt(1, todoId);
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next())
+                items.add(new ItemEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("description"), todoId));
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return items;
+    }
    
    
     
