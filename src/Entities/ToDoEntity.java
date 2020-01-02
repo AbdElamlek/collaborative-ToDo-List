@@ -6,31 +6,35 @@
 package Entities;
 
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
+import java.sql.Date;
 
 /**
  *
  * @author Abd-Elmalek
  */
 public class ToDoEntity implements BaseEntity {
-    
+
     private int id;
     private String title;
     private Date assignDate;
     private Date deadLineDate;
+    private int status;
     private int ownerId;
+
     private ArrayList<UserEntity> clllaboratorList;
     private ArrayList<ItemEntity> itemsList;
 
     public ToDoEntity() {
     }
 
-    public ToDoEntity(int id, String title, Date assignDate, Date deadLineDate, int ownerId) {
+    public ToDoEntity(int id, String title, Date assignDate, Date deadLineDate, int ownerId, int status) {
         this.id = id;
         this.title = title;
         this.assignDate = assignDate;
         this.deadLineDate = deadLineDate;
         this.ownerId = ownerId;
+        this.status = status;
     }
 
     public void setId(int id) {
@@ -53,6 +57,10 @@ public class ToDoEntity implements BaseEntity {
         this.ownerId = ownerId;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }
@@ -72,6 +80,10 @@ public class ToDoEntity implements BaseEntity {
     public int getOwnerId() {
         return ownerId;
     }
+    
+    public int getStatus() {
+        return status;
+    }
 
     public void setClllaboratorList(ArrayList<UserEntity> clllaboratorList) {
         this.clllaboratorList = clllaboratorList;
@@ -88,9 +100,5 @@ public class ToDoEntity implements BaseEntity {
     public ArrayList<ItemEntity> getItemsList() {
         return itemsList;
     }
-    
-    
-    
-    
-    
+
 }
