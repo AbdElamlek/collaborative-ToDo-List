@@ -11,6 +11,7 @@ import Entities.BaseEntity;
 import Entities.UserEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -66,8 +67,43 @@ public class UserController <UserDAO> implements BaseDAO<UserEntity>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
+    public ArrayList<UserEntity> findAllListCollaborators(int todoId){
+        ArrayList<UserEntity> collaborators = new ArrayList<UserEntity>();
+        try{
+            String query = "SELECT id, firstName, lastName, username, email, password\n" +
+                           "FROM [todoDB].[dbo].[user] As u, [todoDB].[dbo].[user_collaborate_todo] AS uct\n" +
+                           "WHERE u.id = uct.collaboratorUserId AND uct.todoId = ?;";
+                    
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, todoId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while(resultSet.next())
+                collaborators.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")));
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return collaborators;
+    }
    
-   
-    
+    public ArrayList<UserEntity> findAllUserFriends(int userId){
+         ArrayList<UserEntity> friends = new ArrayList<UserEntity>();
+         
+         try{
+             String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n" +
+                            "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n" +
+                            "WHERE u.id = uf.friendId AND uf.userId = ?;";
+             
+             PreparedStatement preparedStatement = con.prepareStatement(query);
+             preparedStatement.setInt(1, userId);
+             
+             ResultSet resultSet = preparedStatement.executeQuery();
+             while(resultSet.next())
+                 friends.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")));
+         }catch(SQLException ex){
+             ex.printStackTrace();
+         }
+         return friends;
+    }
 }

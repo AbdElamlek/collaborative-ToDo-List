@@ -5,9 +5,14 @@
  */
 package DAOController;
 
+import Connection.DataBaseConnection;
 import DAOs.BaseDAO;
 import Entities.BaseEntity;
 import Entities.RequestEntity;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +20,9 @@ import java.util.ArrayList;
  * @author Abd-Elmalek
  */
 public class RequestController <RequestDAO> implements BaseDAO<RequestEntity>{
-
+    private Connection connection = DataBaseConnection.getInstance();
+    private PreparedStatement preparedStatement;
+    
     @Override
     public ArrayList<RequestEntity> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -41,6 +48,24 @@ public class RequestController <RequestDAO> implements BaseDAO<RequestEntity>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public ArrayList<RequestEntity> findByReceiverId(int receiverId){
+        ArrayList<RequestEntity> requests = new ArrayList<RequestEntity>();
+        
+        try{
+            String query = "SELECT *\n" +
+                           "FROM [todoDB].[dbo].[request]\n" +
+                           "WHERE receiverUserId = ?;";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, receiverId);
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next())
+                requests.add(new RequestEntity(resultSet.getInt("id"), resultSet.getDate("time"), resultSet.getInt("type"), resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId")));
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return requests;
+    }
 
    
    

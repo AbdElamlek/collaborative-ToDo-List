@@ -128,7 +128,45 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
         }
     }
 
+    public ArrayList<TaskEntity> findByItemId(int itemId){
+        ArrayList<TaskEntity> tasks = new ArrayList<TaskEntity>();
+        
+        try{
+            String query = "SELECT * FROM [todoDB].[dbo].[task] WHERE itemId = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            
+            preparedStatement.setInt(1, itemId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while(resultSet.next())
+                tasks.add(new TaskEntity(resultSet.getInt("id"), resultSet.getString("description"), resultSet.getInt("status"), itemId));
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return tasks;
+    }
+    
+    public ArrayList<TaskEntity> findAllUserAssignedTasks(int userId){
+        ArrayList<TaskEntity> tasks = new ArrayList<TaskEntity>();
+        
+        try{
+            String query = "SELECT t.id, t.description, t.status, t.itemId\n" +
+                           "FROM [todoDB].[dbo].[task] AS t, [todoDB].[dbo].[user_assigned_task] AS uat\n" +
+                           "WHERE t.id = uat.taskId AND uat.userId = ?;";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while(resultSet.next())
+                tasks.add(new TaskEntity(resultSet.getInt("id"), resultSet.getString("description"), resultSet.getInt("status"), resultSet.getInt("itemId")));
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return tasks;
+    }
 }
+
 /*
 Eman Kamal
  */

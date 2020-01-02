@@ -138,7 +138,43 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         }
     }
 
-
+    public ArrayList<ToDoEntity> findByOwnerId(int ownerId){
+        ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
+        
+        try{
+            String query = "SELECT * FROM [todoDB].[dbo].[todo] WHERE ownerId = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            
+            preparedStatement.setInt(1, ownerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while(resultSet.next())
+                todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), ownerId, resultSet.getInt("status")));
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return todos;
+    }
+    
+    ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
+        ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
+        try{
+             String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status\n" +
+                            "FROM [todoDB].[dbo].[todo] AS t, [todoDB].[dbo].[user_collaborate_todo] AS uct\n" +
+                            "WHERE  t.id = uct.todoId AND uct.collaboratorUserId = ?;";
+             
+             PreparedStatement preparedStatement = con.prepareStatement(query);
+             preparedStatement.setInt(1, userId);
+             
+             ResultSet resultSet = preparedStatement.executeQuery();
+             while(resultSet.next())
+                 todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), resultSet.getInt("ownerId"), resultSet.getInt("status")));
+                 
+         }catch(SQLException ex){
+             ex.printStackTrace();
+         }
+         return todos;
+    }
 }
 /*
     EmanKamal
