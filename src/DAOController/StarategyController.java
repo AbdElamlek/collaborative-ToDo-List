@@ -17,6 +17,10 @@ public class StarategyController<T> implements BaseDAO<T> {
     BaseDAO baseDAO;
     T baseEntity;
 
+    public StarategyController(BaseDAO baseDAO) {
+        this.baseDAO = baseDAO;
+    }
+
     public StarategyController(BaseDAO baseDAO, T baseEntity) {
         this.baseDAO = baseDAO;
         this.baseEntity = baseEntity;
@@ -24,17 +28,17 @@ public class StarategyController<T> implements BaseDAO<T> {
 
     public boolean update(T entity) {
 
-        return baseDAO.update(baseEntity);
+        return baseDAO.update(entity);
     }
 
     public boolean insert(T entity) {
 
-        return baseDAO.insert(baseEntity);
+        return baseDAO.insert(entity);
     }
 
     public boolean delete(T entity) {
 
-        return baseDAO.delete(baseEntity);
+        return baseDAO.delete(entity);
     }
 
     public ArrayList<T> findAll() {

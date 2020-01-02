@@ -31,6 +31,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         Date assignDate = null;
         Date deadLineDate = null;
         int ownerId = 0;
+        int status=0;
         ArrayList<ToDoEntity> todo_list = new ArrayList<ToDoEntity>();
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo");
@@ -41,7 +42,8 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 assignDate = rs.getDate(3);
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
-                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId));
+                status=rs.getInt(6);
+                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,6 +57,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         Date assignDate = null;
         Date deadLineDate = null;
         int ownerId = 0;
+        int status =0;
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo where id=?");
             pst.setInt(1, id);
@@ -65,7 +68,8 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 assignDate = rs.getDate(3);
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
-                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId);
+                status=rs.getInt(6);
+                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status);
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,11 +81,12 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
     public boolean insert(ToDoEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into todo values (?,?,?,?)");
+            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status) values (?,?,?,?,?)");
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
+            pst.setInt(5, entity.getStatus());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,11 +103,13 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
              int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = con.prepareStatement("update todo set title = ?,assignDate = ?,deadLineDate = ?,ownerId = ? where id = ?");
+                    = con.prepareStatement("update todo set title = ?,assignDate = ?,deadLineDate = ?,ownerId = ?,status = ? where id = ?");
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
+            pst.setInt(5, entity.getStatus());
+            pst.setInt(6, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();

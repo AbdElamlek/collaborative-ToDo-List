@@ -73,7 +73,7 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
     public boolean insert(TaskEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into task values (?,?,?)");
+            PreparedStatement pst = con.prepareStatement("insert into task (description,status,itemId) values (?,?,?)");
             pst.setString(1, entity.getDecription());
             pst.setInt(2, entity.getStatus());
             pst.setInt(3, entity.getItemId());
@@ -86,6 +86,8 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
         } else {
             return false;
         }
+        //System.out.println("desc "+entity.getDecription());
+        
     }
 
     @Override
@@ -93,10 +95,11 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = con.prepareStatement("update task set decription = ?,status = ?,itemId = ? where id = ?");
+                    = con.prepareStatement("update task set description = ?,status = ?,itemId = ? where id = ?");
             pst.setString(1, entity.getDecription());
             pst.setInt(2, entity.getStatus());
             pst.setInt(3, entity.getItemId());
+            pst.setInt(4, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
