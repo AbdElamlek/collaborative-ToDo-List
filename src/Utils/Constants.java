@@ -30,4 +30,14 @@ public class Constants {
       public static final String user_friend_Table = "user_friend";
     }
     
+    public class ActionNames{
+          public static final String logInAcation = "login";
+          public static final String registerAcation = "register";
+          public static final String addFriendAcation = "add_friend";
+          public static final String acceptFriendAcation = "accept_friend";
+          public static final String rejectFriendAcation = "reject_friend";
+          public static final String addTodoAcation = "add_todo";
+    
+    }
+    
 }

@@ -10,6 +10,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -21,6 +26,8 @@ public class SocketHandler extends Thread {
     private BufferedReader input;
     private PrintStream output;
     private boolean isRuning = true;
+    private String userId;
+    static Vector<SocketHandler> clientsVector = new Vector<SocketHandler>();
     
     public SocketHandler(Socket socket) {
         try {
@@ -47,4 +54,29 @@ public class SocketHandler extends Thread {
             }
         }
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+    
+    public void senJsonObj(String jsonObj){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonObj);
+            String id = jsonObject.getString("id");
+            for (SocketHandler sh : clientsVector) {
+                if(sh.userId.equals(id)){
+                    sh.output.println(jsonObj);
+                    break;
+                }
+            }
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+    
+    }
+    
 }
