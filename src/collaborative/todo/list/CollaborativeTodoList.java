@@ -51,13 +51,13 @@ public class CollaborativeTodoList extends Application {
 
         con = DataBaseConnection.getInstance();
         stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
-        //UserEntity entity = new UserEntity();
-        //UserController controller = new UserController();
+
+        UserController userController = new UserController();
         ToDoController doController = new ToDoController();
         TaskController taskController = new TaskController();
         StarategyController sc_todo = new StarategyController(doController);
         StarategyController sc_task = new StarategyController(taskController);
-        //StarategyController starategyController = new StarategyController(controller, entity);
+        StarategyController sc_user = new StarategyController(userController);
         //starategyController.insert(entity);
         //starategyController2.insert(doEntity);
 
@@ -71,7 +71,8 @@ public class CollaborativeTodoList extends Application {
         stmt.setString(5, "52147895");
         stmt.executeUpdate();
        
-        /*eman kamal --->Test queries of ToDocontroller && TaskController */
+        /*eman kamal --->Test queries of ToDocontroller && TaskController && UserController */
+        
         //TODOCONTROLLER
         //insert1 
         ToDoEntity todoEntity1 = new ToDoEntity();
@@ -166,7 +167,6 @@ public class CollaborativeTodoList extends Application {
                     + "itemid " + tst_taskEntity1.getItemId() + "\n"
             );
         }
-
         //findbyId
         TaskEntity tst_taskEntity2 = (TaskEntity) sc_task.findById(9);
         System.out.println("findById Test");
@@ -188,6 +188,55 @@ public class CollaborativeTodoList extends Application {
         taskEntity2.setId(18);
         boolean task_d = sc_task.delete(taskEntity2);
         System.out.println(task_d);
+        //USERCONTROLLER
+        //insert1
+        UserEntity userEntity1 = new UserEntity();
+        userEntity1.setFirstName("walaa");
+        userEntity1.setLastName("wagdi");
+        userEntity1.setUserName("walaaelshora");
+        userEntity1.setEmail("walaa@gmail.com");
+        userEntity1.setPassword("123456");
+        sc_user.insert(userEntity1);
+        //insert2
+        UserEntity userEntity2 = new UserEntity();
+        userEntity2.setFirstName("yasmeen");
+        userEntity2.setLastName("ashraf");
+        userEntity2.setUserName("yasmenashraf");
+        userEntity2.setEmail("yasmin@gmail.com");
+        userEntity2.setPassword("123456");
+        sc_user.insert(userEntity2);
+        //update
+        userEntity1.setFirstName("sara");
+        userEntity1.setLastName("ali");
+        userEntity1.setUserName("saraali");
+        userEntity1.setEmail("sara@gmail.com");
+        userEntity1.setPassword("123456");
+        userEntity1.setId(1003);
+        boolean user_u = sc_user.update(userEntity1);
+        System.out.println(user_u);
+        //findbyid
+        UserEntity tst_UserEntity = (UserEntity) sc_user.findById(1);
+        System.out.println("FindByIdTest");
+        System.out.println("firstname " + tst_UserEntity.getFirstName() + "\n"
+                + "lastname " + tst_UserEntity.getLastName() + "\n"
+                + "username " + tst_UserEntity.getUserName() + "\n"
+                + "email " + tst_UserEntity.getEmail() + "\n"
+                + "password " + tst_UserEntity.getPassword() + "\n");
+        //findall
+        ArrayList<UserEntity> users_list = sc_user.findAll();
+        if (users_list.size() > 0) {
+            UserEntity tst_UserEntity2 = users_list.get(2);
+            System.out.println("FindAllTest");
+            System.out.println("firstname " + tst_UserEntity2.getFirstName() + "\n"
+                    + "lastname " + tst_UserEntity2.getLastName() + "\n"
+                    + "username " + tst_UserEntity2.getUserName() + "\n"
+                    + "email " + tst_UserEntity2.getEmail() + "\n"
+                    + "password " + tst_UserEntity2.getPassword() + "\n");
+        }
+        //delete 
+        userEntity2.setId(1004);
+        boolean user_d = sc_user.delete(userEntity2);
+        System.out.println(user_d);
         /*eman kamal*/
     }
 

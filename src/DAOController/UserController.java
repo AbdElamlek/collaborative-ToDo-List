@@ -21,31 +21,88 @@ import java.util.logging.Logger;
  *
  * @author Abd-Elmalek
  */
-public class UserController <UserDAO> implements BaseDAO<UserEntity>{
-     private Connection con = DataBaseConnection.getInstance();
+public class UserController<UserDAO> implements BaseDAO<UserEntity> {
+
+    private Connection con = DataBaseConnection.getInstance();
+    private UserEntity userEntity;
+
+    /* Eman Kamal*/
     @Override
     public ArrayList<UserEntity> findAll() {
-        System.out.println("user");
-        return new ArrayList<>();
+        int id = 0;
+        String firstname = "";
+        String lastname = "";
+        String username = "";
+        String email = "";
+        String password = "";
+        ArrayList<UserEntity> user_list = new ArrayList<UserEntity>();
+        try {
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM [todoDB].[dbo].[user] ");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt(1);
+                firstname = rs.getString(2);
+                lastname = rs.getString(3);
+                username = rs.getString(4);
+                email = rs.getString(5);
+                password = rs.getString(6);
+                user_list.add(new UserEntity(id, firstname, lastname, username, email, password));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user_list;
     }
 
     @Override
     public UserEntity findById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String firstname = "";
+        String lastname = "";
+        String username = "";
+        String email = "";
+        String password = "";
+
+        try {
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM [todoDB].[dbo].[user] WHERE id = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt(1);
+                firstname = rs.getString(2);
+                lastname = rs.getString(3);
+                username = rs.getString(4);
+                email = rs.getString(5);
+                password = rs.getString(6);
+                userEntity = new UserEntity(id, firstname, lastname, username, email, password);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return userEntity;
     }
 
     @Override
     public boolean insert(UserEntity entity) {
-        /* EMAN KAMAL */
         int rows_affected = 0;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into user values (?,?,?,?,?)");
-            pst.setString(1, entity.getFirstName());
-            pst.setString(2, entity.getLastName());
-            pst.setString(3, entity.getUserName());
-            pst.setString(4, entity.getEmail());
-            pst.setString(5, entity.getPassword());
-            rows_affected = pst.executeUpdate();
+            PreparedStatement pst_select = con.prepareStatement("SELECT * FROM [todoDB].[dbo].[user] WHERE username = ? ");
+            pst_select.setString(1, entity.getUserName());
+            ResultSet rs = pst_select.executeQuery();
+            int counter = 0;
+            while (rs.next()) {
+                counter++;
+            }
+            if (counter > 0) {
+                System.out.println("No Duplicates are allowed !!");
+            } else {
+                PreparedStatement pst = con.prepareStatement("INSERT INTO [todoDB].[dbo].[user] (firstName, lastName,username,email,password) VALUES (?,?,?,?,?)");
+                pst.setString(1, entity.getFirstName());
+                pst.setString(2, entity.getLastName());
+                pst.setString(3, entity.getUserName());
+                pst.setString(4, entity.getEmail());
+                pst.setString(5, entity.getPassword());
+                rows_affected = pst.executeUpdate();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,56 +111,88 @@ public class UserController <UserDAO> implements BaseDAO<UserEntity>{
         } else {
             return false;
         }
-      /* EMAN KAMAL */
     }
 
     @Override
     public boolean update(UserEntity entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int rows_affected = 0;
+        try {
+            PreparedStatement pst
+                    = con.prepareStatement("UPDATE [todoDB].[dbo].[user] SET firstName = ?, lastName = ?, username = ?,email=?,password=? WHERE id = ?;");
+            pst.setString(1, entity.getFirstName());
+            pst.setString(2, entity.getLastName());
+            pst.setString(3, entity.getUserName());
+            pst.setString(4, entity.getEmail());
+            pst.setString(5, entity.getPassword());
+            pst.setInt(6, entity.getId());
+            rows_affected = pst.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        if (rows_affected > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean delete(UserEntity entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int rows_affected = 0;
+        try {
+            PreparedStatement pst = con.prepareStatement("DELETE FROM [todoDB].[dbo].[user] WHERE id = ?");
+            pst.setInt(1, entity.getId());
+            rows_affected = pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (rows_affected > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
-    public ArrayList<UserEntity> findAllListCollaborators(int todoId){
+    /* EMAN KAMAL */
+    
+    public ArrayList<UserEntity> findAllListCollaborators(int todoId) {
         ArrayList<UserEntity> collaborators = new ArrayList<UserEntity>();
-        try{
-            String query = "SELECT id, firstName, lastName, username, email, password\n" +
-                           "FROM [todoDB].[dbo].[user] As u, [todoDB].[dbo].[user_collaborate_todo] AS uct\n" +
-                           "WHERE u.id = uct.collaboratorUserId AND uct.todoId = ?;";
-                    
+        try {
+            String query = "SELECT id, firstName, lastName, username, email, password\n"
+                    + "FROM [todoDB].[dbo].[user] As u, [todoDB].[dbo].[user_collaborate_todo] AS uct\n"
+                    + "WHERE u.id = uct.collaboratorUserId AND uct.todoId = ?;";
+
             PreparedStatement preparedStatement = con.prepareStatement(query);
             preparedStatement.setInt(1, todoId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
-            while(resultSet.next())
+
+            while (resultSet.next()) {
                 collaborators.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")));
-            
-        }catch(SQLException ex){
+            }
+
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return collaborators;
     }
-   
-    public ArrayList<UserEntity> findAllUserFriends(int userId){
-         ArrayList<UserEntity> friends = new ArrayList<UserEntity>();
-         
-         try{
-             String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n" +
-                            "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n" +
-                            "WHERE u.id = uf.friendId AND uf.userId = ?;";
-             
-             PreparedStatement preparedStatement = con.prepareStatement(query);
-             preparedStatement.setInt(1, userId);
-             
-             ResultSet resultSet = preparedStatement.executeQuery();
-             while(resultSet.next())
-                 friends.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")));
-         }catch(SQLException ex){
-             ex.printStackTrace();
-         }
-         return friends;
+
+    public ArrayList<UserEntity> findAllUserFriends(int userId) {
+        ArrayList<UserEntity> friends = new ArrayList<UserEntity>();
+
+        try {
+            String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n"
+                    + "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n"
+                    + "WHERE u.id = uf.friendId AND uf.userId = ?;";
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                friends.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return friends;
     }
 }
