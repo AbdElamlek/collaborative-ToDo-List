@@ -118,7 +118,7 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = con.prepareStatement("UPDATE [todoDB].[dbo].[user] SET firstName = ?, lastName = ?, username = ?,email=?,password=? WHERE id = ?;");
+                    = con.prepareStatement("UPDATE [todoDB].[dbo].[user] SET firstName = ?, lastName = ?, username = ?,email=?,password=? WHERE id = ?");
             pst.setString(1, entity.getFirstName());
             pst.setString(2, entity.getLastName());
             pst.setString(3, entity.getUserName());

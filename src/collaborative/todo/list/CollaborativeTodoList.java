@@ -6,10 +6,14 @@
 package collaborative.todo.list;
 
 import Connection.DataBaseConnection;
+import DAOController.NotificationController;
+import DAOController.RequestController;
 import DAOController.StarategyController;
 import DAOController.TaskController;
 import DAOController.ToDoController;
 import DAOController.UserController;
+import Entities.NotificationEntity;
+import Entities.RequestEntity;
 import Entities.TaskEntity;
 import Entities.ToDoEntity;
 import Entities.UserEntity;
@@ -55,9 +59,13 @@ public class CollaborativeTodoList extends Application {
         UserController userController = new UserController();
         ToDoController doController = new ToDoController();
         TaskController taskController = new TaskController();
+        NotificationController notificationController = new NotificationController();
+        RequestController requestController=new RequestController();
         StarategyController sc_todo = new StarategyController(doController);
         StarategyController sc_task = new StarategyController(taskController);
         StarategyController sc_user = new StarategyController(userController);
+        StarategyController sc_notification = new StarategyController(notificationController);
+        StarategyController sc_request = new StarategyController(requestController);
         //starategyController.insert(entity);
         //starategyController2.insert(doEntity);
 
@@ -72,7 +80,6 @@ public class CollaborativeTodoList extends Application {
         stmt.executeUpdate();
        
         /*eman kamal --->Test queries of ToDocontroller && TaskController && UserController */
-        
         //TODOCONTROLLER
         //insert1 
         ToDoEntity todoEntity1 = new ToDoEntity();
@@ -85,7 +92,7 @@ public class CollaborativeTodoList extends Application {
         todoEntity1.setDeadLineDate(deadlineDate);
         todoEntity1.setOwnerId(1);
         todoEntity1.setStatus(1);
-        sc_todo.insert(todoEntity1);
+        //sc_todo.insert(todoEntity1);
         //insert2
         ToDoEntity todoEntity2 = new ToDoEntity();
         String str3 = "2020-01-05";
@@ -97,7 +104,7 @@ public class CollaborativeTodoList extends Application {
         todoEntity2.setDeadLineDate(deadlineDate2);
         todoEntity2.setOwnerId(2);
         todoEntity2.setStatus(0);
-        sc_todo.insert(todoEntity2);
+        //sc_todo.insert(todoEntity2);
         //findall
         ArrayList<ToDoEntity> todos = sc_todo.findAll();
         if (todos.size() > 0) {
@@ -237,6 +244,110 @@ public class CollaborativeTodoList extends Application {
         userEntity2.setId(1004);
         boolean user_d = sc_user.delete(userEntity2);
         System.out.println(user_d);
+
+        //NOTIFICATION CONTROLLER 
+        //insert1 
+        NotificationEntity notificationEntity1 = new NotificationEntity();
+        Date time1 = Date.valueOf("2020-01-03");
+        notificationEntity1.setTime(time1);
+        notificationEntity1.setType(1);
+        notificationEntity1.setReceivedUserId(1);
+        notificationEntity1.setSentUserId(2);
+        //sc_notification.insert(notificationEntity1);
+        //insert2
+        NotificationEntity notificationEntity2 = new NotificationEntity();
+        Date time2 = Date.valueOf("2020-01-04");
+        notificationEntity2.setTime(time2);
+        notificationEntity2.setType(2);
+        notificationEntity2.setReceivedUserId(1003);
+        notificationEntity2.setSentUserId(1009);
+        //sc_notification.insert(notificationEntity2);
+        //update 
+        Date time3 = Date.valueOf("2020-01-07");
+        notificationEntity2.setTime(time3);
+        notificationEntity2.setType(1);
+        notificationEntity2.setReceivedUserId(1);
+        notificationEntity2.setSentUserId(2);
+        notificationEntity2.setId(2);
+        boolean notification2_u = sc_notification.update(notificationEntity2);
+        System.out.println(notification2_u);
+        //delete 
+        notificationEntity2.setId(3);
+        boolean notification_d = sc_notification.delete(notificationEntity2);
+        System.out.println(notification_d);
+        //findbyid
+        NotificationEntity tst_notificationEntity1 = (NotificationEntity) sc_notification.findById(1);
+        System.out.println("FindByIdTest");
+        System.out.println("time " + tst_notificationEntity1.getTime() + "\n"
+                + "type " + tst_notificationEntity1.getType() + "\n"
+                + "recievedUserId " + tst_notificationEntity1.getReceivedUserId() + "\n"
+                + "sentUserId " + tst_notificationEntity1.getSentUserId());
+        //findall
+        ArrayList<NotificationEntity> notification_list = sc_notification.findAll();
+        if (notification_list.size() > 0) {
+            NotificationEntity tst_notificationEntity2 = notification_list.get(1);
+            System.out.println("FindByAllTest");
+            System.out.println("time " + tst_notificationEntity2.getTime() + "\n"
+                    + "type " + tst_notificationEntity2.getType() + "\n"
+                    + "recievedUserId " + tst_notificationEntity2.getReceivedUserId() + "\n"
+                    + "sentUserId " + tst_notificationEntity2.getSentUserId());
+        }
+        
+         //REQUESTCONTROLLER 
+        //insert1 
+        RequestEntity requestEntity1 = new RequestEntity();
+        Date time4 = Date.valueOf("2020-01-10");
+        requestEntity1.setTime(time4);
+        requestEntity1.setType(1);
+        requestEntity1.setReceivedUserId(2);
+        requestEntity1.setSentUserId(1);
+        //sc_request.insert(requestEntity1);
+        //insert2
+        RequestEntity requestEntity2 = new RequestEntity();
+        Date time5 = Date.valueOf("2020-01-20");
+        requestEntity2.setTime(time5);
+        requestEntity2.setType(2);
+        requestEntity2.setReceivedUserId(1);
+        requestEntity2.setSentUserId(2);
+        //sc_request.insert(requestEntity2);
+        //insert3
+        RequestEntity requestEntity3 = new RequestEntity();
+        Date time7 = Date.valueOf("2020-01-25");
+        requestEntity3.setTime(time5);
+        requestEntity3.setType(2);
+        requestEntity3.setReceivedUserId(1);
+        requestEntity3.setSentUserId(2);
+        //sc_request.insert(requestEntity3);
+        //update 
+        Date time6 = Date.valueOf("2020-01-07");
+        requestEntity2.setTime(time6);
+        requestEntity2.setType(1);
+        requestEntity2.setReceivedUserId(1);
+        requestEntity2.setSentUserId(2);
+        requestEntity2.setId(2);
+        boolean requestEntity2_u = sc_request.update(requestEntity2);
+        System.out.println(requestEntity2_u);
+        //delete 
+        requestEntity3.setId(3);
+        boolean request_d = sc_request.delete(requestEntity3);
+        System.out.println(request_d);
+        //findbyid
+        RequestEntity tst_requestEntity1 = (RequestEntity) sc_request.findById(1);
+        System.out.println("FindByIdTest");
+        System.out.println("time " + tst_requestEntity1.getTime() + "\n"
+                + "type " + tst_requestEntity1.getType() + "\n"
+                + "recievedUserId " + tst_requestEntity1.getReceivedUserId() + "\n"
+                + "sentUserId " + tst_requestEntity1.getSentUserId());
+        //findall
+        ArrayList<RequestEntity> request_list = sc_request.findAll();
+        if (request_list.size() > 0) {
+            RequestEntity tst_requestEntity2 = request_list.get(1);
+            System.out.println("FindByAllTest");
+            System.out.println("time " + tst_requestEntity2.getTime() + "\n"
+                    + "type " + tst_requestEntity2.getType() + "\n"
+                    + "recievedUserId " + tst_requestEntity2.getReceivedUserId() + "\n"
+                    + "sentUserId " + tst_requestEntity2.getSentUserId());
+        }
         /*eman kamal*/
     }
 
