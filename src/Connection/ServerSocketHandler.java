@@ -12,12 +12,12 @@ import java.net.ServerSocket;
  *
  * @author ahmedpro
  */
-public class DataBaseServerSocket extends Thread {
+public class ServerSocketHandler extends Thread {
     
     private ServerSocket serverSocket;
     private boolean isRunning = false;
 
-    public DataBaseServerSocket() {
+    public ServerSocketHandler() {
         try {
             serverSocket = new ServerSocket(7777);
         } catch (IOException ex) {

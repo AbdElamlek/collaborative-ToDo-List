@@ -38,7 +38,7 @@ public class CollaborativeTodoList extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = new FXMLDocumentBase();
 
         Scene scene = new Scene(root);
 
