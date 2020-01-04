@@ -10,6 +10,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -21,6 +26,7 @@ public class SocketHandler extends Thread {
     private BufferedReader input;
     private PrintStream output;
     private boolean isRuning = true;
+  
     
     public SocketHandler(Socket socket) {
         try {
@@ -47,4 +53,10 @@ public class SocketHandler extends Thread {
             }
         }
     }
+
+ 
+  
+    
+  
+    
 }
