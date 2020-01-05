@@ -7,6 +7,7 @@ package Connection;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Vector;
 
 /**
@@ -16,12 +17,38 @@ import java.util.Vector;
 public class ServerSocketHandler extends Thread {
     
     private ServerSocket serverSocket;
-    private Vector<SocketHandler> sockets;
+    private static Vector<SocketHandler> sockets;
     private boolean isRunning = false;
+    private String userId;//userId is set upon successful login attempt or registeration
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    public void setServerSocket(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
+
+    public Vector<SocketHandler> getSockets() {
+        return sockets;
+    }
+
+    public void setSockets(Vector<SocketHandler> sockets) {
+        this.sockets = sockets;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+    
 
     public ServerSocketHandler() {
         try {
-            serverSocket = new ServerSocket(7777);
+            serverSocket = new ServerSocket(5005);
             sockets = new Vector<>();
         } catch (IOException ex) {
             System.out.println(ex);
@@ -47,8 +74,12 @@ public class ServerSocketHandler extends Thread {
         while (isRunning) {
             isRunning = false;
             try {
-                sockets.add(new SocketHandler(serverSocket.accept()));
+                System.err.println("before accept");
+                Socket socket = serverSocket.accept();
+                sockets.add(new SocketHandler(socket));
+                
                 isRunning = true;
+                System.err.println("after accept");
             } catch (IOException ex) {
                 System.out.println(ex);
             }
