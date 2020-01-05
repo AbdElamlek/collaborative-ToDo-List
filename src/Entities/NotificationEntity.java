@@ -5,7 +5,7 @@
  */
 package Entities;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -15,14 +15,14 @@ public class NotificationEntity implements BaseEntity {
     
     private int id;
     private Date time;
-    private String type;
+    private int type;
     private int receivedUserId;
     private int sentUserId;
 
     public NotificationEntity() {
     }
 
-    public NotificationEntity(int id, Date time, String type, int receivedUserId, int sentUserId) {
+    public NotificationEntity(int id, Date time, int type, int receivedUserId, int sentUserId) {
         this.id = id;
         this.time = time;
         this.type = type;
@@ -38,7 +38,7 @@ public class NotificationEntity implements BaseEntity {
         this.time = time;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -58,7 +58,7 @@ public class NotificationEntity implements BaseEntity {
         return time;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 

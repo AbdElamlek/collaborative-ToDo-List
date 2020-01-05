@@ -8,6 +8,7 @@ package DAOController;
 import Connection.DataBaseConnection;
 import DAOs.BaseDAO;
 import Entities.CommentEntity;
+import Entities.UserEntity;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -32,7 +33,7 @@ public class CommentController<CommentDAO> implements BaseDAO<CommentEntity>{
             ResultSet resultSet = preparedStatement.executeQuery();
             
             while(resultSet.next()){
-                comments.add(new CommentEntity(resultSet.getInt("id"), resultSet.getString("messageContent"), resultSet.getDate("time")));
+                comments.add(new CommentEntity(resultSet.getInt("id"), resultSet.getString("messageContent"), resultSet.getDate("time"), null, 0));
             }
             
         } catch (SQLException ex) {
@@ -51,7 +52,7 @@ public class CommentController<CommentDAO> implements BaseDAO<CommentEntity>{
             ResultSet resultSet = preparedStatement.executeQuery();
             
             if(resultSet.next())
-                return new CommentEntity(resultSet.getInt("id"), resultSet.getString("messageContent"), resultSet.getDate("time"));
+                return new CommentEntity(resultSet.getInt("id"), resultSet.getString("messageContent"), resultSet.getDate("time"), null, 0);
             
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -67,8 +68,21 @@ public class CommentController<CommentDAO> implements BaseDAO<CommentEntity>{
             
             preparedStatement.setString(1, entity.getMessageContent());
             preparedStatement.setDate(2, (Date) entity.getTime());
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
             
-            return (preparedStatement.executeUpdate() > 0);
+            if (rs.next()){
+                
+                query = "INSERT INTO [todoDB].[dbo].[user_do_comment_task] VALUES (?, ?, ?)";
+                preparedStatement = connection.prepareStatement(query);
+                
+                preparedStatement.setInt(1, entity.getCommentOwner().getId());
+                preparedStatement.setInt(1, entity.getCommentedTaskId());
+                preparedStatement.setInt(3, rs.getInt("id"));
+                
+                if(preparedStatement.executeUpdate() > 0)
+                    return true;
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         } 
@@ -104,5 +118,31 @@ public class CommentController<CommentDAO> implements BaseDAO<CommentEntity>{
             ex.printStackTrace();
         }
         return false;
-    }    
+    }  
+    
+    public ArrayList<CommentEntity> findByTaskId(int taskId){
+        ArrayList<CommentEntity> comments = new ArrayList<CommentEntity>();
+        UserEntity commentOwnerTemp;
+        try{
+            String query = "SELECT userId, firstName, lastName, username, email, password, commentId, messageContent, time\n" +
+                           "FROM [todoDB].[dbo].[user_do_comment_task] AS udct, [todoDB].[dbo].[comment] AS c, [todoDB].[dbo].[user] AS u\n" +
+                           "WHERE u.id = udct.userId AND c.id = udct.commentId AND udct.taskId = ?;";
+            
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, taskId);
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while(resultSet.next()){
+                commentOwnerTemp = new UserEntity(resultSet.getInt("userId"), resultSet.getString("firstName"),
+                                   resultSet.getString("lastName"), resultSet.getString("username"),
+                                   resultSet.getString("email"), resultSet.getString("password"));
+                
+                comments.add(new CommentEntity(resultSet.getInt("commentId"), resultSet.getString("messageContent"), resultSet.getDate("time"), commentOwnerTemp, taskId));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return comments;
+    }
 }
