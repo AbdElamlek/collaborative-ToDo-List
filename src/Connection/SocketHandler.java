@@ -7,37 +7,45 @@ package Connection;
 
 import DAOController.UserController;
 import Entities.UserEntity;
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.google.gson.Gson;
 
 /**
- *
- * @author ahmedprso
+ * 
+ * @author ahmedpro
  */
-public class SocketHandler extends Thread {
 
+public class SocketHandler extends Thread {
+    
+    private Socket socket;
     private BufferedReader input;
     private PrintStream output;
     private boolean isRuning = true;
-
+    
     public SocketHandler(Socket socket) {
         try {
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            output = new PrintStream(socket.getOutputStream());
+            this.socket = socket;
+            input = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            output = new PrintStream(this.socket.getOutputStream());
         } catch (IOException ex) {
             System.out.println(ex);
         }
-
+        
         start();
+    }
+    
+    public void closeSocket() {
+        try {
+            socket.close();
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
     }
 
     @Override
@@ -45,7 +53,7 @@ public class SocketHandler extends Thread {
         while (isRuning) {
             isRuning = false;
             try {
-
+                
                 String recievedString = input.readLine();
                 System.out.println(input.readLine());
                 /*eman kamal*/
@@ -57,8 +65,8 @@ public class SocketHandler extends Thread {
             }
         }
     }
-
-    /*Eman Kamal*/
+    
+        /*Eman Kamal*/
     public void handleResponse(String jsonObjectStr) {
         UserController userController = new UserController();
         Gson gson = new Gson();
@@ -82,5 +90,5 @@ public class SocketHandler extends Thread {
         }
     }
     /*Eman Kamal*/
-
 }
+

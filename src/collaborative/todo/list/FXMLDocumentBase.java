@@ -5,7 +5,7 @@
  */
 package collaborative.todo.list;
 
-import Connection.DataBaseServerSocket;
+import Connection.ServerSocketHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -18,7 +18,7 @@ public class FXMLDocumentBase extends AnchorPane {
 
     protected final Button start;
     protected final Button stop;
-    private DataBaseServerSocket server;
+    private ServerSocketHandler server;
 
     public FXMLDocumentBase() {
         
@@ -37,7 +37,7 @@ public class FXMLDocumentBase extends AnchorPane {
         start.setPrefWidth(128.0);
         start.setText("start");
         start.addEventHandler(ActionEvent.ACTION, (action) -> {
-            server = new DataBaseServerSocket();
+            server = new ServerSocketHandler();
             server.startServer();
             start.setDisable(true);
             stop.setDisable(false);
@@ -51,7 +51,7 @@ public class FXMLDocumentBase extends AnchorPane {
         stop.setPrefWidth(128.0);
         stop.setText("stop");
         stop.addEventHandler(ActionEvent.ACTION, (action) -> {
-            server.stopServer();
+            server.closeServer();
             start.setDisable(false);
             stop.setDisable(true);
         });
@@ -59,5 +59,10 @@ public class FXMLDocumentBase extends AnchorPane {
         getChildren().add(start);
         getChildren().add(stop);
 
+    }
+    
+    public void closeServerSocket() {
+        if (server != null)
+            server.closeServer();
     }
 }
