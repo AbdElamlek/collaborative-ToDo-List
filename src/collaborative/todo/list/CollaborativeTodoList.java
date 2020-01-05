@@ -43,10 +43,11 @@ public class CollaborativeTodoList extends Application {
     PreparedStatement pStatment;
     ResultSet rs;
     String queryString;
+    FXMLDocumentBase root;
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        root = new FXMLDocumentBase();
 
         Scene scene = new Scene(root);
 
@@ -350,6 +351,13 @@ public class CollaborativeTodoList extends Application {
         }
         /*eman kamal*/
     }
+
+    @Override
+    public void stop() throws Exception {
+        root.closeServerSocket();
+    }
+    
+    
 
     /**
      * @param args the command line arguments
