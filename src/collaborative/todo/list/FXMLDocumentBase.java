@@ -51,7 +51,7 @@ public class FXMLDocumentBase extends AnchorPane {
         stop.setPrefWidth(128.0);
         stop.setText("stop");
         stop.addEventHandler(ActionEvent.ACTION, (action) -> {
-            server.stopServer();
+            server.closeServer();
             start.setDisable(false);
             stop.setDisable(true);
         });
@@ -59,5 +59,10 @@ public class FXMLDocumentBase extends AnchorPane {
         getChildren().add(start);
         getChildren().add(stop);
 
+    }
+    
+    public void closeServerSocket() {
+        if (server != null)
+            server.closeServer();
     }
 }
