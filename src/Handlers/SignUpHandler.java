@@ -33,6 +33,8 @@ public class SignUpHandler implements ActionHandler{
                 //registerd!
                 System.out.println(userEntity.getId());
                 printStream.println(responseJsonObject);
+
+
             } else {
                 //Not Registered
             }
