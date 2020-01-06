@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +85,7 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
     @Override
     public boolean insert(UserEntity entity) {
         int rows_affected = 0;
+        PreparedStatement pst = null;
         try {
             PreparedStatement pst_select = con.prepareStatement("SELECT * FROM [todoDB].[dbo].[user] WHERE username = ? ");
             pst_select.setString(1, entity.getUserName());
@@ -95,18 +97,29 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
             if (counter > 0) {
                 System.out.println("No Duplicates are allowed !!");
             } else {
-                PreparedStatement pst = con.prepareStatement("INSERT INTO [todoDB].[dbo].[user] (firstName, lastName,username,email,password) VALUES (?,?,?,?,?)");
+                pst = con.prepareStatement("INSERT INTO [todoDB].[dbo].[user] (firstName, lastName,username,email,password) VALUES (?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
                 pst.setString(1, entity.getFirstName());
                 pst.setString(2, entity.getLastName());
                 pst.setString(3, entity.getUserName());
                 pst.setString(4, entity.getEmail());
                 pst.setString(5, entity.getPassword());
                 rows_affected = pst.executeUpdate();
+                
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
+            try {
+                ResultSet rs2 = pst.getGeneratedKeys();
+                if(rs2.next()){
+                    int userId=rs2.getInt(1);
+                    entity.setId(userId);
+                    System.out.println(userId);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return true;
         } else {
             return false;
