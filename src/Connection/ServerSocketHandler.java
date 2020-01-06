@@ -21,7 +21,7 @@ public class ServerSocketHandler extends Thread {
 
     public ServerSocketHandler() {
         try {
-            serverSocket = new ServerSocket(7777);
+            serverSocket = new ServerSocket(5005);
             sockets = new Vector<>();
         } catch (IOException ex) {
             System.out.println(ex);

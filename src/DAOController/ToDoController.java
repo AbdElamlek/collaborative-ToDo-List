@@ -156,7 +156,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         return todos;
     }
     
-    ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
+    public ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
         ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
         try{
              String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status\n" +

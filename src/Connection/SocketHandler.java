@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,7 +57,7 @@ public class SocketHandler extends Thread {
             try {
                 
                 String recievedString = input.readLine();
-                System.out.println(input.readLine());
+                System.out.println("received json: "+recievedString);
                 /*eman kamal*/
                 handleResponse(recievedString);
                 /*eman kamal*/
@@ -66,7 +68,7 @@ public class SocketHandler extends Thread {
         }
     }
     
-        /*Eman Kamal*/
+        /*Eman Kamal
     public void handleResponse(String jsonObjectStr) {
         UserController userController = new UserController();
         Gson gson = new Gson();
@@ -89,6 +91,25 @@ public class SocketHandler extends Thread {
             ex.printStackTrace();
         }
     }
-    /*Eman Kamal*/
+    Eman Kamal*/
+    
+    public void handleResponse(String jsonObjectStr){
+        System.out.println("****SERVER handleResponse");
+        try {
+            JSONObject jsonObject = new JSONObject(jsonObjectStr);
+            String className = jsonObject.getString("className");
+            ActionHandler actionHandler = null;
+            
+            switch(className){
+                case "UserEntity":
+                    actionHandler = new UserActionHandler();
+                    
+            }
+            Handler handler = new Handler(actionHandler);
+            handler.handleAction(jsonObjectStr);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
 
