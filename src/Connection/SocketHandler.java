@@ -63,7 +63,7 @@ public class SocketHandler extends Thread {
 
                 String recievedString = input.readLine();
                 System.out.println(recievedString);
-
+              
                 try {
                     JSONObject jsonObject = new JSONObject(recievedString);
                     String action = jsonObject.getString("action");
@@ -75,7 +75,7 @@ public class SocketHandler extends Thread {
                     ex.printStackTrace();
                 }
                 /*eman kamal*/
-                // handleResponse(recievedString);
+                 handleResponse(recievedString);
                 /*eman kamal*/
                 isRuning = true;
             } catch (IOException ex) {

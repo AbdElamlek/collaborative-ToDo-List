@@ -31,6 +31,7 @@ public class SignUpHandler implements ActionHandler{
             UserController userController = new UserController();
             if (userController.insert(userEntity)) {
                 //registerd!
+                System.out.println(userEntity.getId());
                 printStream.println(responseJsonObject);
             } else {
                 //Not Registered
