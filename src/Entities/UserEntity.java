@@ -38,6 +38,18 @@ public class UserEntity implements BaseEntity {
         this.email = email;
         this.password = password;
     }
+    
+    public UserEntity(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
+    
+    public UserEntity(String password, int status, int id, String userName) {
+        this.password = password;
+        this.userStatus = status;
+        this.id = id;
+        this.userName = userName;
+    }
 
     public void setId(int id) {
         this.id = id;

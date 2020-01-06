@@ -88,14 +88,19 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
             pst.setInt(4, entity.getOwnerId());
             pst.setInt(5, entity.getStatus());
             rows_affected = pst.executeUpdate();
+            
+            if (rows_affected > 0) {
+                ResultSet resultSet = pst.getGeneratedKeys();
+                if(resultSet.next()){
+                    entity.setId(resultSet.getInt("id"));
+                    return true;
+                }
+            } 
+            
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (rows_affected > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     @Override
@@ -156,7 +161,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         return todos;
     }
     
-    ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
+    public ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
         ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
         try{
              String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status\n" +

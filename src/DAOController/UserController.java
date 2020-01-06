@@ -208,4 +208,22 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         }
         return friends;
     }
+    
+    public UserEntity findByUsernameAndPassword(String username, String password){
+        try{
+           String query = "SELECT * FROM [todoDB].[dbo].[user] WHERE username = ? AND password = ?";
+           PreparedStatement preparedStatement = con.prepareStatement(query);
+           preparedStatement.setString(1, username);
+           preparedStatement.setString(2, password);
+           
+           ResultSet resultSet = preparedStatement.executeQuery();
+           if(resultSet.next())
+               return new UserEntity(resultSet.getInt("id"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getString("username"), resultSet.getString("email"), resultSet.getString("password"));
+        
+           
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -9,6 +9,7 @@ import ControllerBase.ActionHandler;
 import DAOController.UserController;
 import Entities.NotificationEntity;
 import Entities.UserEntity;
+import Handlers.LoginHandler;
 import Handlers.SignUpHandler;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
@@ -62,8 +63,9 @@ public class SocketHandler extends Thread {
             try {
 
                 String recievedString = input.readLine();
-                System.out.println(recievedString);
-              
+
+                System.out.println("received json: "+recievedString);
+
                 try {
                     JSONObject jsonObject = new JSONObject(recievedString);
                     String action = jsonObject.getString("action");
@@ -74,8 +76,11 @@ public class SocketHandler extends Thread {
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
+
                 /*eman kamal*/
-                 handleResponse(recievedString);
+
+                handleResponse(recievedString);
+
                 /*eman kamal*/
                 isRuning = true;
             } catch (IOException ex) {
@@ -83,8 +88,9 @@ public class SocketHandler extends Thread {
             }
         }
     }
+    
+        /*Eman Kamal*/
 
-    /*Eman Kamal*/
     public void handleResponse(String jsonObjectStr) {
         try {
            
@@ -96,16 +102,41 @@ public class SocketHandler extends Thread {
             switch (action) {
                 case "signup":
                     actionHandler = new SignUpHandler();
-                    actionHandler.handleAction(jsonObjectStr, output);
                     break;
+                case "logIn":
+                    actionHandler = new LoginHandler();
+                    break;
+                case "create todo list":
+                    
             }
+            actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
        
     }
-
     /*Eman Kamal*/
+    
+    /*public void handleResponse(String jsonObjectStr){
+        System.out.println("****SERVER handleResponse");
+        try {
+            JSONObject jsonObject = new JSONObject(jsonObjectStr);
+            String className = jsonObject.getString("className");
+            ActionHandler actionHandler = null;
+            
+            switch(className){
+                case "UserEntity":
+                    actionHandler = new UserActionHandler();
+                    
+            }
+            Handler handler = new Handler(actionHandler);
+            handler.handleAction(jsonObjectStr);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+    }*/
+
+
 
  /*abd-elamelk */
     private void broadCastNotification(String jsonResponse) {
