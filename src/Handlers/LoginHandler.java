@@ -14,6 +14,7 @@ import DAOController.UserController;
 import Entities.EntityWrapper;
 import Entities.UserEntity;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class LoginHandler implements ActionHandler{
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
         
-        gson = new Gson();
+        gson = new GsonBuilder().serializeNulls().create();
         userController = new UserController();
         try {  
             JSONObject jsonObject = new JSONObject(requestJsonObject);
@@ -56,7 +57,7 @@ public class LoginHandler implements ActionHandler{
                 RequestController requestController = new RequestController();
                 retrievedUser.setRequestList(requestController.findByReceiverId(retrievedUser.getId()));   
             }
-           
+            
             printStream.println(gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser)));
             
         }catch(JSONException ex){

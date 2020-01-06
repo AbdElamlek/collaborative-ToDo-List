@@ -10,6 +10,7 @@ import DAOController.ToDoController;
 import Entities.EntityWrapper;
 import Entities.ToDoEntity;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ public class ToDoCreationHandler implements ActionHandler{
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
         todoController = new ToDoController();
-        
+        gson = new GsonBuilder().serializeNulls().create();
         try{
             JSONObject jsonObject = new JSONObject(requestJsonObject);
             String todoJsonObject  = jsonObject.getJSONObject("entity").toString();
