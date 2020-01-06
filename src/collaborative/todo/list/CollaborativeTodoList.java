@@ -54,10 +54,12 @@ public class CollaborativeTodoList extends Application {
         stage.setScene(scene);
         stage.show();
 
+
         con = DataBaseConnection.getInstance();
         stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
         
        
+
     }
 
     @Override

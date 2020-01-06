@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Connection;
+package Handlers;
 
+import ControllerBase.ActionHandler;
 import DAOController.ToDoController;
+import Entities.EntityWrapper;
 import Entities.ToDoEntity;
 import com.google.gson.Gson;
-import java.sql.SQLException;
+import java.io.PrintStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,34 +18,26 @@ import org.json.JSONObject;
  *
  * @author Reham
  */
-public class ToDoActionHandler implements ActionHandler{
+public class ToDoCreationHandler implements ActionHandler{
     private Gson gson;
     private ToDoController todoController;
     
     @Override
-    public String handleAction(String requestJsonObject) {
+    public void handleAction(String requestJsonObject, PrintStream printStream) {
         todoController = new ToDoController();
-        String responseJsonObject = "";
         
         try{
             JSONObject jsonObject = new JSONObject(requestJsonObject);
             String todoJsonObject  = jsonObject.getJSONObject("entity").toString();
             ToDoEntity todo = gson.fromJson(todoJsonObject, ToDoEntity.class);
             
-            switch(jsonObject.getJSONObject("action").toString()){
-                case "create todo list":
-                    responseJsonObject = handleTodoCreation(todo);
-                
+            if(todoController.insert(todo)){
+                String responseJsonObject = gson.toJson(new EntityWrapper("create todo list", "ToDoEntity", todo));
+                printStream.println(responseJsonObject);
             }
         }catch(JSONException ex){
             ex.printStackTrace();
         }
-        return responseJsonObject;
-    }
-    
-    public String handleTodoCreation(ToDoEntity todo){
-        todoController.insert(todo);
-        return "";
     }
     
 }
