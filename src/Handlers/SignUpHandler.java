@@ -6,7 +6,9 @@
 package Handlers;
 
 import ControllerBase.ActionHandler;
+import DAOController.AdapterController;
 import DAOController.UserController;
+import Entities.EntityWrapper;
 import Entities.UserEntity;
 import com.google.gson.Gson;
 import java.io.PrintStream;
@@ -29,12 +31,13 @@ public class SignUpHandler implements ActionHandler{
             String userJsonObject = jsonObject.getJSONObject("entity").toString();
             UserEntity userEntity = gson.fromJson(userJsonObject, UserEntity.class);
             UserController userController = new UserController();
+            AdapterController adapterController=new AdapterController();
             if (userController.insert(userEntity)) {
                 //registerd!
-                System.out.println(userEntity.getId());
-                printStream.println(responseJsonObject);
-
-
+                System.out.println("server : "+userEntity.getId());
+                String userJson=adapterController.entity2Json(new EntityWrapper("signup","UserEntity",userEntity));
+                System.out.println("server sent userjson: "+userJson);
+                printStream.println(userJson);
             } else {
                 //Not Registered
             }
