@@ -12,5 +12,5 @@ import java.io.PrintStream;
  * @author Abd-Elmalek
  */
 public interface ActionHandler { //Strategy in strategy pattern
-    public void handleAction(String responseJsonObject , PrintStream printStream);
+    public void handleAction(String requestJsonObject , PrintStream printStream);
 }

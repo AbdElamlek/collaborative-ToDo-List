@@ -9,9 +9,14 @@ import ControllerBase.ActionHandler;
 import DAOController.UserController;
 import Entities.NotificationEntity;
 import Entities.UserEntity;
+import Handlers.AcceptTaskHandler;
+import Handlers.AssignTaskHandler;
 import Handlers.LoginHandler;
+import Handlers.RejectTaskHandler;
 import Handlers.SignUpHandler;
 import Handlers.ToDoCreationHandler;
+import Handlers.UpdateTaskStatusHandler;
+import Handlers.withdrawFromTaskHandler;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -109,6 +114,23 @@ public class SocketHandler extends Thread {
                     break;
                 case "create todo list":
                     actionHandler = new ToDoCreationHandler();
+                    break;
+                case "assigonToTaskRequest":
+                    actionHandler = new AssignTaskHandler();
+                    break;
+                case "changeTaskStatus":
+                    actionHandler = new UpdateTaskStatusHandler();
+                    break;
+                case "acceptTask":
+                    actionHandler = new AcceptTaskHandler();
+                    break;   
+                case "rejectTaskRequest":
+                    actionHandler = new RejectTaskHandler();
+                    break;        
+                case "withdrawFromTask":
+                    actionHandler = new withdrawFromTaskHandler();
+                    break;            
+                    
                     
             }
             actionHandler.handleAction(jsonObjectStr, output);
