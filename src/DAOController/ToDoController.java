@@ -180,6 +180,21 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
          }
          return todos;
     }
+    
+    public boolean insertUserTodoCollaboration(int userId, int todoId){
+        try {
+            String query = "INSERT INTO [todoDB].[dbo].[user_collaborate_todo] (collaboratorUserId, todoId) VALUES (?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, todoId);
+            
+            if(preparedStatement.executeUpdate() > 0)
+                return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }
 /*
     EmanKamal

@@ -226,4 +226,19 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         }
         return null;
     }
+    
+    public boolean insertFriend(int userId, int friendId){
+        try {
+            String query = "INSERT INTO [todoDB].[dbo].[user_friend] (userId, friendId) VALUES (?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, friendId);
+            
+            if(preparedStatement.executeUpdate() > 0)
+                return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

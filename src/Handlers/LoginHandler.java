@@ -6,16 +6,22 @@
 package Handlers;
 
 import ControllerBase.ActionHandler;
+import DAOController.CommentController;
+import DAOController.ItemController;
 import DAOController.NotificationController;
 import DAOController.RequestController;
 import DAOController.TaskController;
 import DAOController.ToDoController;
 import DAOController.UserController;
 import Entities.EntityWrapper;
+import Entities.ItemEntity;
+import Entities.TaskEntity;
+import Entities.ToDoEntity;
 import Entities.UserEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,12 +47,43 @@ public class LoginHandler implements ActionHandler{
             UserEntity retrievedUser = userController.findByUsernameAndPassword(user.getUserName(), user.getPassword());
             
             if(retrievedUser != null){
-                System.out.println("****SERVER FOUND");
                 ToDoController todoController = new ToDoController();
-                retrievedUser.setTodoList(todoController.findByOwnerId(retrievedUser.getId()));
-                retrievedUser.setColaboartedList(todoController.findAllUserCollaboratedInTodos(retrievedUser.getId()));
-
+                ItemController itemController = new ItemController();
                 TaskController taskController = new TaskController();
+                CommentController commentController = new CommentController();
+                
+                // MY TODO LISTS
+                
+                ArrayList<ToDoEntity> userTodoLists = todoController.findByOwnerId(retrievedUser.getId());
+                for(ToDoEntity todo : userTodoLists){
+                    ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
+                    
+                    for(ItemEntity item : todoItems){
+                        ArrayList<TaskEntity> tasks = taskController.findByItemId(item.getId());
+                        for(TaskEntity task : tasks)
+                            task.setCommentsList(commentController.findByTaskId(task.getId()));
+                        item.setTasksList(tasks);
+                    }
+                    todo.setItemsList(todoItems);  
+                }
+                retrievedUser.setTodoList(userTodoLists);
+                
+                // THE TODO LISTS I COLLABORATE IN
+                
+                ArrayList<ToDoEntity> collaborationTodoLists = todoController.findAllUserCollaboratedInTodos(retrievedUser.getId());
+                for(ToDoEntity todo : collaborationTodoLists){
+                    ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
+                    
+                    for(ItemEntity item : todoItems){
+                        ArrayList<TaskEntity> tasks = taskController.findByItemId(item.getId());
+                        for(TaskEntity task : tasks)
+                            task.setCommentsList(commentController.findByTaskId(task.getId()));
+                        item.setTasksList(tasks);
+                    }
+                    todo.setItemsList(todoItems);  
+                }
+                retrievedUser.setColaboartedList(collaborationTodoLists);
+                
                 retrievedUser.setTasksList(taskController.findAllUserAssignedTasks(retrievedUser.getId()));
 
                 retrievedUser.setFriendList(userController.findAllUserFriends(retrievedUser.getId()));

@@ -165,6 +165,21 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
         }
         return tasks;
     }
+    
+    public boolean insertUserTaskAssignment(int userId, int taskId){
+        try {
+            String query = "INSERT INTO [todoDB].[dbo].[user_assigned_task] (userId, taskId) VALUES (?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, taskId);
+            
+            if(preparedStatement.executeUpdate() > 0)
+                return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }
 
 /*
