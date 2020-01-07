@@ -11,6 +11,7 @@ import Entities.NotificationEntity;
 import Entities.UserEntity;
 import Handlers.LoginHandler;
 import Handlers.SignUpHandler;
+import Handlers.ToDoCreationHandler;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -107,6 +108,7 @@ public class SocketHandler extends Thread {
                     actionHandler = new LoginHandler();
                     break;
                 case "create todo list":
+                    actionHandler = new ToDoCreationHandler();
                     
             }
             actionHandler.handleAction(jsonObjectStr, output);

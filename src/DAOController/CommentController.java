@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -64,7 +65,7 @@ public class CommentController<CommentDAO> implements BaseDAO<CommentEntity>{
     public boolean insert(CommentEntity entity) {
         try {
             String query = "INSERT INTO [todoDB].[dbo].[comment] (messageContent, time) VALUES (?, ?)";
-            preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             
             preparedStatement.setString(1, entity.getMessageContent());
             preparedStatement.setDate(2, (Date) entity.getTime());

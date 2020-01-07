@@ -26,7 +26,7 @@ public class ToDoCreationHandler implements ActionHandler{
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
         todoController = new ToDoController();
-        gson = new GsonBuilder().serializeNulls().create();
+        gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         try{
             JSONObject jsonObject = new JSONObject(requestJsonObject);
             String todoJsonObject  = jsonObject.getJSONObject("entity").toString();

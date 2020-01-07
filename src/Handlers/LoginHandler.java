@@ -36,7 +36,7 @@ public class LoginHandler implements ActionHandler{
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
         
-        gson = new GsonBuilder().serializeNulls().create();
+        gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         userController = new UserController();
         try {  
             JSONObject jsonObject = new JSONObject(requestJsonObject);
@@ -56,6 +56,7 @@ public class LoginHandler implements ActionHandler{
                 
                 ArrayList<ToDoEntity> userTodoLists = todoController.findByOwnerId(retrievedUser.getId());
                 for(ToDoEntity todo : userTodoLists){
+                    todo.setClllaboratorList(userController.findAllListCollaborators(todo.getId()));
                     ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
                     
                     for(ItemEntity item : todoItems){
@@ -94,8 +95,9 @@ public class LoginHandler implements ActionHandler{
                 RequestController requestController = new RequestController();
                 retrievedUser.setRequestList(requestController.findByReceiverId(retrievedUser.getId()));   
             }
-            
-            printStream.println(gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser)));
+            String responseJsonObject = gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser));
+            System.out.println("response Json before send: " + responseJsonObject);
+            printStream.println(responseJsonObject);
             
         }catch(JSONException ex){
             ex.printStackTrace();

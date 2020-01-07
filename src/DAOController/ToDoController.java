@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.sql.Statement;
 
 /**
  *
@@ -81,7 +82,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
     public boolean insert(ToDoEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status) values (?,?,?,?,?)");
+            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status) values (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
@@ -92,7 +93,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
             if (rows_affected > 0) {
                 ResultSet resultSet = pst.getGeneratedKeys();
                 if(resultSet.next()){
-                    entity.setId(resultSet.getInt("id"));
+                    entity.setId(resultSet.getInt(1));
                     return true;
                 }
             } 
