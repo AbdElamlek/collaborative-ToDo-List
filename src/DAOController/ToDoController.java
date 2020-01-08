@@ -33,6 +33,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         Date deadLineDate = null;
         int ownerId = 0;
         int status=0;
+        String color = "";
         ArrayList<ToDoEntity> todo_list = new ArrayList<ToDoEntity>();
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo");
@@ -44,7 +45,8 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
                 status=rs.getInt(6);
-                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status));
+                color = rs.getString(7);
+                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status, color));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,6 +61,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         Date deadLineDate = null;
         int ownerId = 0;
         int status =0;
+        String color = "";
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo where id=?");
             pst.setInt(1, id);
@@ -70,7 +73,8 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
                 status=rs.getInt(6);
-                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status);
+                color = rs.getString(7);
+                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status, color);
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,13 +113,14 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
              int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = con.prepareStatement("update todo set title = ?,assignDate = ?,deadLineDate = ?,ownerId = ?,status = ? where id = ?");
+                    = con.prepareStatement("update todo set title = ?,assignDate = ?,deadLineDate = ?,ownerId = ?,status = ?, color = ? where id = ?");
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
             pst.setInt(5, entity.getStatus());
             pst.setInt(6, entity.getId());
+            pst.setString(7, entity.getColor());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -155,7 +160,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
             ResultSet resultSet = preparedStatement.executeQuery();
             
             while(resultSet.next())
-                todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), ownerId, resultSet.getInt("status")));
+                todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), ownerId, resultSet.getInt("status"), resultSet.getString("color")));
         }catch(SQLException ex){
             ex.printStackTrace();
         }
@@ -174,7 +179,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
              
              ResultSet resultSet = preparedStatement.executeQuery();
              while(resultSet.next())
-                 todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), resultSet.getInt("ownerId"), resultSet.getInt("status")));
+                 todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), resultSet.getInt("ownerId"), resultSet.getInt("status"), resultSet.getString("color")));
                  
          }catch(SQLException ex){
              ex.printStackTrace();
