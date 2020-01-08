@@ -86,12 +86,13 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
     public boolean insert(ToDoEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status) values (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status,color) values (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
             pst.setInt(5, entity.getStatus());
+            pst.setString(6, entity.getColor());
             rows_affected = pst.executeUpdate();
             
             if (rows_affected > 0) {
@@ -170,7 +171,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
     public ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
         ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
         try{
-             String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status\n" +
+             String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status, t.color\n" +
                             "FROM [todoDB].[dbo].[todo] AS t, [todoDB].[dbo].[user_collaborate_todo] AS uct\n" +
                             "WHERE  t.id = uct.todoId AND uct.collaboratorUserId = ?;";
              
