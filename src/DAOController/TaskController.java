@@ -180,6 +180,23 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
         }
         return false;
     }
+    
+    public boolean deleteUserTaskAssignment(int userId, int taskId){
+         int rows_affected = 0;
+        try {
+            PreparedStatement pst = con.prepareStatement("delete from [user_assigned_task] where userId = ? and taskId = ?");
+            pst.setInt(1, userId);
+            pst.setInt(2, taskId);
+            rows_affected = pst.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        if (rows_affected > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 /*
