@@ -21,8 +21,8 @@ public class ToDoEntity implements BaseEntity {
     private Date deadLineDate;
     private int status;
     private int ownerId;
-
-    private ArrayList<UserEntity> clllaboratorList;
+       
+    private ArrayList<UserEntity> collaboratorList;
     private ArrayList<ItemEntity> itemsList;
 
     public ToDoEntity() {
@@ -85,12 +85,12 @@ public class ToDoEntity implements BaseEntity {
         return status;
     }
 
-    public void setClllaboratorList(ArrayList<UserEntity> clllaboratorList) {
-        this.clllaboratorList = clllaboratorList;
+    public void setCollaboratorList(ArrayList<UserEntity> collaboratorList) {
+        this.collaboratorList = collaboratorList;
     }
 
-    public ArrayList<UserEntity> getClllaboratorList() {
-        return clllaboratorList;
+    public ArrayList<UserEntity> getCollaboratorList() {
+        return collaboratorList;
     }
 
     public void setItemsList(ArrayList<ItemEntity> itemsList) {

@@ -25,7 +25,7 @@ public class UserEntity implements BaseEntity {
     private ArrayList<NotificationEntity> notificationList;
     private ArrayList<TaskEntity> tasksList;
     private ArrayList<ToDoEntity> todoList;
-    private ArrayList<ToDoEntity> colaboartedList;
+    private ArrayList<ToDoEntity> collaboratorList;
 
     public UserEntity() {
     }
@@ -140,12 +140,12 @@ public class UserEntity implements BaseEntity {
         this.todoList = todoList;
     }
 
-    public ArrayList<ToDoEntity> getColaboartedList() {
-        return colaboartedList;
+    public ArrayList<ToDoEntity> getCollaboartedList() {
+        return collaboratorList;
     }
 
-    public void setColaboartedList(ArrayList<ToDoEntity> colaboartedList) {
-        this.colaboartedList = colaboartedList;
+    public void setCollaboartedList(ArrayList<ToDoEntity> collaboartedList) {
+        this.collaboratorList = collaboartedList;
     }
     
     

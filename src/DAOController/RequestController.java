@@ -33,7 +33,6 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
     public ArrayList<RequestEntity> findAll() {
         int id = 0;
         Date time = null;
-        int type = 0;
         int receiverUserId = 0;
         int senderUserId = 0;
         ArrayList<RequestEntity> request_list = new ArrayList<RequestEntity>();
@@ -43,10 +42,9 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
             while (rs.next()) {
                 id = rs.getInt(1);
                 time = rs.getDate(2);
-                type = rs.getInt(3);
-                receiverUserId = rs.getInt(4);
-                senderUserId = rs.getInt(5);
-                request_list.add(new RequestEntity(id, time, type, receiverUserId, senderUserId));
+                receiverUserId = rs.getInt(3);
+                senderUserId = rs.getInt(4);
+                request_list.add(new RequestEntity(id, time,receiverUserId, senderUserId));
             }
         } catch (SQLException ex) {
             Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +55,6 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
     @Override
     public RequestEntity findById(int id) {
         Date time = null;
-        int type = 0;
         int receiverUserId = 0;
         int senderUserId = 0;
         try {
@@ -67,10 +64,9 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
             while (rs.next()) {
                 id = rs.getInt(1);
                 time = rs.getDate(2);
-                type = rs.getInt(3);
-                receiverUserId = rs.getInt(4);
-                senderUserId = rs.getInt(5);
-                requestEntity = new RequestEntity(id, time, type, receiverUserId, senderUserId);
+                receiverUserId = rs.getInt(3);
+                senderUserId = rs.getInt(4);
+                requestEntity = new RequestEntity(id, time,receiverUserId, senderUserId);
             }
         } catch (SQLException ex) {
             Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,18 +77,29 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
     @Override
     public boolean insert(RequestEntity entity) {
         int rows_affected = 0;
+        PreparedStatement pst=null;
         try {
-            PreparedStatement pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[request] (time, type,receiverUserId,senderUserId) VALUES (?,?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[request] (time,receiverUserId,senderUserId) VALUES (?,?,?)");
             pst.setDate(1, entity.getTime());
-            pst.setInt(2, entity.getType());
-            pst.setInt(3, entity.getReceivedUserId());
-            pst.setInt(4, entity.getSentUserId());
+            pst.setInt(2, entity.getReceivedUserId());
+            pst.setInt(3, entity.getSentUserId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
-            return true;
+            try {
+                ResultSet rs2 = pst.getGeneratedKeys();
+                if (rs2.next()) {
+                    int reqId = rs2.getInt(1);
+                    entity.setId(reqId);
+                    System.out.println(reqId);
+                }
+               
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             return true;
         } else {
             return false;
         }
@@ -103,12 +110,11 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[request] SET time = ?, type = ?, receiverUserId = ?,senderUserId=? WHERE id = ?");
+                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[request] SET time = ?, receiverUserId = ?,senderUserId=? WHERE id = ?");
             pst.setDate(1, entity.getTime());
-            pst.setInt(2, entity.getType());
-            pst.setInt(3, entity.getReceivedUserId());
-            pst.setInt(4, entity.getSentUserId());
-            pst.setInt(5, entity.getId());
+            pst.setInt(2, entity.getReceivedUserId());
+            pst.setInt(3, entity.getSentUserId());
+            pst.setInt(4, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -136,6 +142,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
             return false;
         }
     }
+
     /*EMAN KAMAL */
     public ArrayList<RequestEntity> findByReceiverId(int receiverId) {
         ArrayList<RequestEntity> requests = new ArrayList<RequestEntity>();
@@ -149,7 +156,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                requests.add(new RequestEntity(resultSet.getInt("id"), resultSet.getDate("time"), resultSet.getInt("type"), resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId")));
+                requests.add(new RequestEntity(resultSet.getInt("id"), resultSet.getDate("time"),resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

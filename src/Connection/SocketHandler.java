@@ -9,9 +9,12 @@ import ControllerBase.ActionHandler;
 import DAOController.UserController;
 import Entities.NotificationEntity;
 import Entities.UserEntity;
+import Handlers.AcceptCollaboratorRequestHandler;
 import Handlers.AcceptTaskHandler;
+import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AssignTaskHandler;
 import Handlers.LoginHandler;
+import Handlers.RejectCollaboratorRequestHandler;
 import Handlers.RejectTaskHandler;
 import Handlers.SignUpHandler;
 import Handlers.ToDoCreationHandler;
@@ -70,21 +73,20 @@ public class SocketHandler extends Thread {
 
                 String recievedString = input.readLine();
 
-                System.out.println("received json: "+recievedString);
+                System.out.println("received json: " + recievedString);
 
                 try {
                     JSONObject jsonObject = new JSONObject(recievedString);
                     String action = jsonObject.getString("action");
                     if (action.equals("notification")) {
-                         broadCastNotification(recievedString);
-                            
+                        broadCastNotification(recievedString);
+
                     }
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
 
                 /*eman kamal*/
-
                 handleResponse(recievedString);
 
                 /*eman kamal*/
@@ -94,17 +96,16 @@ public class SocketHandler extends Thread {
             }
         }
     }
-    
-        /*Eman Kamal*/
 
+    /*Eman Kamal*/
     public void handleResponse(String jsonObjectStr) {
         try {
-           
+
             ActionHandler actionHandler = null;
-            
+
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
             String action = jsonObject.getString("action");
-          
+
             switch (action) {
                 case "signup":
                     actionHandler = new SignUpHandler();
@@ -123,25 +124,34 @@ public class SocketHandler extends Thread {
                     break;
                 case "acceptTask":
                     actionHandler = new AcceptTaskHandler();
-                    break;   
+                    break;
                 case "rejectTaskRequest":
                     actionHandler = new RejectTaskHandler();
-                    break;        
+                    break;
                 case "withdrawFromTask":
                     actionHandler = new withdrawFromTaskHandler();
-                    break;            
-                    
-                    
+                    break;
+                case "add collaborator request":
+                    actionHandler = new AddCollaboratorRequestHandler();
+                    break;
+                case "accept collaborator request":
+                    actionHandler = new AcceptCollaboratorRequestHandler();
+                    break;
+                case "reject collaborator request":
+                    actionHandler = new RejectCollaboratorRequestHandler();
+                    break;
+
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
-       
+
     }
+
     /*Eman Kamal*/
-    
-    /*public void handleResponse(String jsonObjectStr){
+
+ /*public void handleResponse(String jsonObjectStr){
         System.out.println("****SERVER handleResponse");
         try {
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
@@ -159,15 +169,12 @@ public class SocketHandler extends Thread {
             ex.printStackTrace();
         }
     }*/
-
-
-
  /*abd-elamelk */
     private void broadCastNotification(String jsonResponse) {
-        for (SocketHandler socketH: socketHandlers){
+        for (SocketHandler socketH : socketHandlers) {
             socketH.output.println(jsonResponse);
         }
-    }   
+    }
     /*abd-elamelk */
 
 }

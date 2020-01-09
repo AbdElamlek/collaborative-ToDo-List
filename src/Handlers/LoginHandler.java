@@ -56,7 +56,7 @@ public class LoginHandler implements ActionHandler{
                 
                 ArrayList<ToDoEntity> userTodoLists = todoController.findByOwnerId(retrievedUser.getId());
                 for(ToDoEntity todo : userTodoLists){
-                    todo.setClllaboratorList(userController.findAllListCollaborators(todo.getId()));
+                    todo.setCollaboratorList(userController.findAllListCollaborators(todo.getId()));
                     ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
                     
                     for(ItemEntity item : todoItems){
@@ -83,7 +83,7 @@ public class LoginHandler implements ActionHandler{
                     }
                     todo.setItemsList(todoItems);  
                 }
-                retrievedUser.setColaboartedList(collaborationTodoLists);
+                retrievedUser.setCollaboartedList(collaborationTodoLists);
                 
                 retrievedUser.setTasksList(taskController.findAllUserAssignedTasks(retrievedUser.getId()));
 
