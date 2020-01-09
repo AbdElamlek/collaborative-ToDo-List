@@ -15,9 +15,12 @@ import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AssignTaskHandler;
 import Handlers.LoginHandler;
 import Handlers.RejectCollaboratorRequestHandler;
-import Handlers.RejectTaskHandler;
+import Handlers.NotificationHandler;
 import Handlers.SignUpHandler;
 import Handlers.ToDoCreationHandler;
+import Handlers.ToDoDeleteHandler;
+import Handlers.ToDoUpdateHandler;
+import Handlers.RejectTaskHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
 import com.google.gson.Gson;
@@ -43,6 +46,7 @@ public class SocketHandler extends Thread {
     private PrintStream output;
     private boolean isRuning = true;
     private static Vector<SocketHandler> socketHandlers = new Vector<>();
+    private int userId;
 
     public SocketHandler(Socket socket) {
         try {
@@ -73,18 +77,8 @@ public class SocketHandler extends Thread {
 
                 String recievedString = input.readLine();
 
-                System.out.println("received json: " + recievedString);
 
-                try {
-                    JSONObject jsonObject = new JSONObject(recievedString);
-                    String action = jsonObject.getString("action");
-                    if (action.equals("notification")) {
-                        broadCastNotification(recievedString);
-
-                    }
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
+                System.out.println("received json: "+recievedString);
 
                 /*eman kamal*/
                 handleResponse(recievedString);
@@ -112,9 +106,22 @@ public class SocketHandler extends Thread {
                     break;
                 case "logIn":
                     actionHandler = new LoginHandler();
+                    ((LoginHandler)actionHandler).assignUserIdToSocket(this::setUserId);
+                    break;
+                case "notification":
+                    broadCast(jsonObjectStr);
+                    actionHandler = new NotificationHandler();
                     break;
                 case "create todo list":
                     actionHandler = new ToDoCreationHandler();
+                    break;
+                case "update todo list":
+                    //broadCast(jsonObjectStr);
+                    actionHandler = new ToDoUpdateHandler();
+                    break;
+                case "delete todo list":
+                    //broadCast(jsonObjectStr);
+                    actionHandler = new ToDoDeleteHandler();
                     break;
                 case "assigonToTaskRequest":
                     actionHandler = new AssignTaskHandler();
@@ -140,7 +147,6 @@ public class SocketHandler extends Thread {
                 case "reject collaborator request":
                     actionHandler = new RejectCollaboratorRequestHandler();
                     break;
-
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
@@ -151,27 +157,17 @@ public class SocketHandler extends Thread {
 
     /*Eman Kamal*/
 
- /*public void handleResponse(String jsonObjectStr){
-        System.out.println("****SERVER handleResponse");
-        try {
-            JSONObject jsonObject = new JSONObject(jsonObjectStr);
-            String className = jsonObject.getString("className");
-            ActionHandler actionHandler = null;
-            
-            switch(className){
-                case "UserEntity":
-                    actionHandler = new UserActionHandler();
-                    
-            }
-            Handler handler = new Handler(actionHandler);
-            handler.handleAction(jsonObjectStr);
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        }
-    }*/
+    
+    /*Reham*/
+    public void setUserId(int id){
+        this.userId = id;
+        System.out.println("i have got id: " + id);
+    }
+    /*Reham*/
+
  /*abd-elamelk */
-    private void broadCastNotification(String jsonResponse) {
-        for (SocketHandler socketH : socketHandlers) {
+    private void broadCast(String jsonResponse) {
+        for (SocketHandler socketH: socketHandlers){
             socketH.output.println(jsonResponse);
         }
     }

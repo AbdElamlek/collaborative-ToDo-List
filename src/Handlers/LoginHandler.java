@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +33,11 @@ import org.json.JSONObject;
 public class LoginHandler implements ActionHandler{
     private Gson gson;
     private UserController userController;
+    private Consumer<Integer> userIdSetter;
+    
+    public void assignUserIdToSocket(Consumer<Integer> userIdSetter){
+        this.userIdSetter = userIdSetter;
+    }
     
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
@@ -47,6 +53,9 @@ public class LoginHandler implements ActionHandler{
             UserEntity retrievedUser = userController.findByUsernameAndPassword(user.getUserName(), user.getPassword());
             
             if(retrievedUser != null){
+                if(userIdSetter != null)
+                    userIdSetter.accept(retrievedUser.getId());
+                
                 ToDoController todoController = new ToDoController();
                 ItemController itemController = new ItemController();
                 TaskController taskController = new TaskController();

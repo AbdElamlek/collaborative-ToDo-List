@@ -21,20 +21,22 @@ public class ToDoEntity implements BaseEntity {
     private Date deadLineDate;
     private int status;
     private int ownerId;
-       
+    private String color;
+    
     private ArrayList<UserEntity> collaboratorList;
     private ArrayList<ItemEntity> itemsList;
 
     public ToDoEntity() {
     }
 
-    public ToDoEntity(int id, String title, Date assignDate, Date deadLineDate, int ownerId, int status) {
+    public ToDoEntity(int id, String title, Date assignDate, Date deadLineDate, int ownerId, int status, String color) {
         this.id = id;
         this.title = title;
         this.assignDate = assignDate;
         this.deadLineDate = deadLineDate;
         this.ownerId = ownerId;
         this.status = status;
+        this.color = color;
     }
 
     public void setId(int id) {
@@ -101,4 +103,12 @@ public class ToDoEntity implements BaseEntity {
         return itemsList;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+    
 }

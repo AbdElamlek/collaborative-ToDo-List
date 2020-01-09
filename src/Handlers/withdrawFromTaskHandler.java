@@ -7,6 +7,7 @@ package Handlers;
 
 import ControllerBase.ActionHandler;
 import DAOController.TaskController;
+import DTOs.Accept_RejectTaskDTO;
 import Entities.TaskEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,8 +31,8 @@ public class withdrawFromTaskHandler implements ActionHandler{
                 JSONObject jsonObject = new JSONObject(requestJsonObject);
                 String requestTaskJsonObject  = jsonObject.getJSONObject("entity").toString();
                 System.out.println("******json: "+requestTaskJsonObject);
-                TaskEntity taskEntity = gson.fromJson(requestTaskJsonObject, TaskEntity.class);
-                if(taskController.deleteUserTaskAssignment(Integer.parseInt(taskEntity.getAssignedUsersList().get(taskEntity.getAssignedUsersList().size()-1)),taskEntity.getId())){
+                Accept_RejectTaskDTO accept_RejectTaskDTO = gson.fromJson(requestTaskJsonObject, Accept_RejectTaskDTO.class);
+                if(taskController.deleteUserTaskAssignment(accept_RejectTaskDTO.getUserId(),accept_RejectTaskDTO.getTaskId())){
                     System.out.println("deleted");
                 }
             } catch (JSONException ex) {
