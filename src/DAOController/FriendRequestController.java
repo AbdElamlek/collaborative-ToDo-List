@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author Abd-Elmalek
  */
-public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
+public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntity> {
 
     private Connection connection = DataBaseConnection.getInstance();
     private PreparedStatement preparedStatement;
@@ -37,7 +37,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
         int senderUserId = 0;
         ArrayList<RequestEntity> request_list = new ArrayList<RequestEntity>();
         try {
-            PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[request] ");
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] ");
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 id = rs.getInt(1);
@@ -47,7 +47,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
                 request_list.add(new RequestEntity(id, time,receiverUserId, senderUserId));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return request_list;
     }
@@ -58,7 +58,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
         int receiverUserId = 0;
         int senderUserId = 0;
         try {
-            PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[request] WHERE id = ?");
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE id = ?");
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
@@ -69,7 +69,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
                 requestEntity = new RequestEntity(id, time,receiverUserId, senderUserId);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return requestEntity;
     }
@@ -79,13 +79,13 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
         int rows_affected = 0;
         PreparedStatement pst=null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[request] (time,receiverUserId,senderUserId) VALUES (?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId) VALUES (?,?,?)");
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
             try {
@@ -97,7 +97,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
                 }
                
             } catch (SQLException ex) {
-                Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
             }
              return true;
         } else {
@@ -110,7 +110,7 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[request] SET time = ?, receiverUserId = ?,senderUserId=? WHERE id = ?");
+                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[friend_request] SET time = ?, receiverUserId = ?,senderUserId=? WHERE id = ?");
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
@@ -130,11 +130,11 @@ public class RequestController<RequestDAO> implements BaseDAO<RequestEntity> {
     public boolean delete(RequestEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = connection.prepareStatement("DELETE FROM [todoDB].[dbo].[request] WHERE id = ?");
+            PreparedStatement pst = connection.prepareStatement("DELETE FROM [todoDB].[dbo].[friend_request] WHERE id = ?");
             pst.setInt(1, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
             return true;

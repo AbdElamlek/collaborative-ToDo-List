@@ -6,7 +6,7 @@
 package Handlers;
 
 import ControllerBase.ActionHandler;
-import DAOController.RequestController;
+import DAOController.FriendRequestController;
 import Entities.RequestEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,13 +21,13 @@ import org.json.JSONObject;
 public class AssignTaskHandler implements ActionHandler{
     
     private Gson gson;
-    private RequestController requestController;
+    private FriendRequestController requestController;
 
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
          try {
              gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
-             requestController = new RequestController();
+             requestController = new FriendRequestController();
              JSONObject jsonObject = new JSONObject(requestJsonObject);
              String requestTaskJsonObject  = jsonObject.getJSONObject("entity").toString();
              System.out.println("******json: "+requestTaskJsonObject);

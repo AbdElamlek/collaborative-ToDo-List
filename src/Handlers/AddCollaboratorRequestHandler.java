@@ -8,7 +8,7 @@ package Handlers;
 import ControllerBase.ActionHandler;
 import DAOController.AdapterController;
 import DAOController.CollaboratorRequestController;
-import DAOController.RequestController;
+import DAOController.FriendRequestController;
 import Entities.EntityWrapper;
 import Entities.CollaborationRequestEntity;
 import com.google.gson.Gson;

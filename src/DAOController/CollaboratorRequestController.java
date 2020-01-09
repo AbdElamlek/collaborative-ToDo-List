@@ -48,7 +48,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
                 request_list.add(new CollaborationRequestEntity(todoId, id, time,receiverUserId, senderUserId));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return request_list;
     }
@@ -72,7 +72,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
                 collaborationRequestEntity = new CollaborationRequestEntity(todoId, id, time, receiverUserId, senderUserId);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return collaborationRequestEntity;
     }
@@ -89,7 +89,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
             pst.setInt(4, entity.getTodoId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
             return true;
@@ -128,7 +128,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
             pst.setInt(1, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
             return true;

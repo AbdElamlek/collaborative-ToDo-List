@@ -7,7 +7,7 @@ package collaborative.todo.list;
 
 import Connection.DataBaseConnection;
 import DAOController.NotificationController;
-import DAOController.RequestController;
+import DAOController.FriendRequestController;
 import DAOController.StarategyController;
 import DAOController.TaskController;
 import DAOController.ToDoController;

@@ -9,7 +9,7 @@ import ControllerBase.ActionHandler;
 import DAOController.CommentController;
 import DAOController.ItemController;
 import DAOController.NotificationController;
-import DAOController.RequestController;
+import DAOController.FriendRequestController;
 import DAOController.TaskController;
 import DAOController.ToDoController;
 import DAOController.UserController;
@@ -92,7 +92,7 @@ public class LoginHandler implements ActionHandler{
                 NotificationController notificationController = new NotificationController();
                 retrievedUser.setNotificationList(notificationController.findByReceiverId(retrievedUser.getId()));
 
-                RequestController requestController = new RequestController();
+                FriendRequestController requestController = new FriendRequestController();
                 retrievedUser.setRequestList(requestController.findByReceiverId(retrievedUser.getId()));   
             }
             String responseJsonObject = gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser));
