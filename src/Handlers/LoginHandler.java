@@ -9,7 +9,7 @@ import ControllerBase.ActionHandler;
 import DAOController.CommentController;
 import DAOController.ItemController;
 import DAOController.NotificationController;
-import DAOController.RequestController;
+import DAOController.FriendRequestController;
 import DAOController.TaskController;
 import DAOController.ToDoController;
 import DAOController.UserController;
@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +33,11 @@ import org.json.JSONObject;
 public class LoginHandler implements ActionHandler{
     private Gson gson;
     private UserController userController;
+    private Consumer<Integer> userIdSetter;
+    
+    public void assignUserIdToSocket(Consumer<Integer> userIdSetter){
+        this.userIdSetter = userIdSetter;
+    }
     
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
@@ -47,6 +53,9 @@ public class LoginHandler implements ActionHandler{
             UserEntity retrievedUser = userController.findByUsernameAndPassword(user.getUserName(), user.getPassword());
             
             if(retrievedUser != null){
+                if(userIdSetter != null)
+                    userIdSetter.accept(retrievedUser.getId());
+                
                 ToDoController todoController = new ToDoController();
                 ItemController itemController = new ItemController();
                 TaskController taskController = new TaskController();
@@ -56,7 +65,7 @@ public class LoginHandler implements ActionHandler{
                 
                 ArrayList<ToDoEntity> userTodoLists = todoController.findByOwnerId(retrievedUser.getId());
                 for(ToDoEntity todo : userTodoLists){
-                    todo.setClllaboratorList(userController.findAllListCollaborators(todo.getId()));
+                    todo.setCollaboratorList(userController.findAllListCollaborators(todo.getId()));
                     ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
                     
                     for(ItemEntity item : todoItems){
@@ -83,7 +92,7 @@ public class LoginHandler implements ActionHandler{
                     }
                     todo.setItemsList(todoItems);  
                 }
-                retrievedUser.setColaboartedList(collaborationTodoLists);
+                retrievedUser.setCollaboartedList(collaborationTodoLists);
                 
                 retrievedUser.setTasksList(taskController.findAllUserAssignedTasks(retrievedUser.getId()));
 
@@ -92,7 +101,7 @@ public class LoginHandler implements ActionHandler{
                 NotificationController notificationController = new NotificationController();
                 retrievedUser.setNotificationList(notificationController.findByReceiverId(retrievedUser.getId()));
 
-                RequestController requestController = new RequestController();
+                FriendRequestController requestController = new FriendRequestController();
                 retrievedUser.setRequestList(requestController.findByReceiverId(retrievedUser.getId()));   
             }
             String responseJsonObject = gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser));

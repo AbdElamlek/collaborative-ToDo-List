@@ -9,12 +9,18 @@ import ControllerBase.ActionHandler;
 import DAOController.UserController;
 import Entities.NotificationEntity;
 import Entities.UserEntity;
+import Handlers.AcceptCollaboratorRequestHandler;
 import Handlers.AcceptTaskHandler;
+import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AssignTaskHandler;
 import Handlers.LoginHandler;
-import Handlers.RejectTaskHandler;
+import Handlers.RejectCollaboratorRequestHandler;
+import Handlers.NotificationHandler;
 import Handlers.SignUpHandler;
 import Handlers.ToDoCreationHandler;
+import Handlers.ToDoDeleteHandler;
+import Handlers.ToDoUpdateHandler;
+import Handlers.RejectTaskHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
 import com.google.gson.Gson;
@@ -40,6 +46,7 @@ public class SocketHandler extends Thread {
     private PrintStream output;
     private boolean isRuning = true;
     private static Vector<SocketHandler> socketHandlers = new Vector<>();
+    private int userId;
 
     public SocketHandler(Socket socket) {
         try {
@@ -70,21 +77,10 @@ public class SocketHandler extends Thread {
 
                 String recievedString = input.readLine();
 
+
                 System.out.println("received json: "+recievedString);
 
-                try {
-                    JSONObject jsonObject = new JSONObject(recievedString);
-                    String action = jsonObject.getString("action");
-                    if (action.equals("notification")) {
-                         broadCastNotification(recievedString);
-                            
-                    }
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-
                 /*eman kamal*/
-
                 handleResponse(recievedString);
 
                 /*eman kamal*/
@@ -94,26 +90,38 @@ public class SocketHandler extends Thread {
             }
         }
     }
-    
-        /*Eman Kamal*/
 
+    /*Eman Kamal*/
     public void handleResponse(String jsonObjectStr) {
         try {
-           
+
             ActionHandler actionHandler = null;
-            
+
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
             String action = jsonObject.getString("action");
-          
+
             switch (action) {
                 case "signup":
                     actionHandler = new SignUpHandler();
                     break;
                 case "logIn":
                     actionHandler = new LoginHandler();
+                    ((LoginHandler)actionHandler).assignUserIdToSocket(this::setUserId);
+                    break;
+                case "notification":
+                    broadCast(jsonObjectStr);
+                    actionHandler = new NotificationHandler();
                     break;
                 case "create todo list":
                     actionHandler = new ToDoCreationHandler();
+                    break;
+                case "update todo list":
+                    //broadCast(jsonObjectStr);
+                    actionHandler = new ToDoUpdateHandler();
+                    break;
+                case "delete todo list":
+                    //broadCast(jsonObjectStr);
+                    actionHandler = new ToDoDeleteHandler();
                     break;
                 case "assigonToTaskRequest":
                     actionHandler = new AssignTaskHandler();
@@ -123,51 +131,46 @@ public class SocketHandler extends Thread {
                     break;
                 case "acceptTask":
                     actionHandler = new AcceptTaskHandler();
-                    break;   
+                    break;
                 case "rejectTaskRequest":
                     actionHandler = new RejectTaskHandler();
-                    break;        
+                    break;
                 case "withdrawFromTask":
                     actionHandler = new withdrawFromTaskHandler();
-                    break;            
-                    
-                    
+                    break;
+                case "add collaborator request":
+                    actionHandler = new AddCollaboratorRequestHandler();
+                    break;
+                case "accept collaborator request":
+                    actionHandler = new AcceptCollaboratorRequestHandler();
+                    break;
+                case "reject collaborator request":
+                    actionHandler = new RejectCollaboratorRequestHandler();
+                    break;
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
-       
+
     }
+
     /*Eman Kamal*/
+
     
-    /*public void handleResponse(String jsonObjectStr){
-        System.out.println("****SERVER handleResponse");
-        try {
-            JSONObject jsonObject = new JSONObject(jsonObjectStr);
-            String className = jsonObject.getString("className");
-            ActionHandler actionHandler = null;
-            
-            switch(className){
-                case "UserEntity":
-                    actionHandler = new UserActionHandler();
-                    
-            }
-            Handler handler = new Handler(actionHandler);
-            handler.handleAction(jsonObjectStr);
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        }
-    }*/
-
-
+    /*Reham*/
+    public void setUserId(int id){
+        this.userId = id;
+        System.out.println("i have got id: " + id);
+    }
+    /*Reham*/
 
  /*abd-elamelk */
-    private void broadCastNotification(String jsonResponse) {
+    private void broadCast(String jsonResponse) {
         for (SocketHandler socketH: socketHandlers){
             socketH.output.println(jsonResponse);
         }
-    }   
+    }
     /*abd-elamelk */
 
 }

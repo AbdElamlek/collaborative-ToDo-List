@@ -8,6 +8,7 @@ import DAOs.BaseDAO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Entities.ToDoEntity;
+import Entities.UserEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,12 +28,13 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
 
     @Override
     public ArrayList<ToDoEntity> findAll() {
-        int id =0;
+        int id = 0;
         String title = "";
         Date assignDate = null;
         Date deadLineDate = null;
         int ownerId = 0;
         int status=0;
+        String color = "";
         ArrayList<ToDoEntity> todo_list = new ArrayList<ToDoEntity>();
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo");
@@ -44,7 +46,8 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
                 status=rs.getInt(6);
-                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status));
+                color = rs.getString(7);
+                todo_list.add(new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status, color));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,6 +62,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         Date deadLineDate = null;
         int ownerId = 0;
         int status =0;
+        String color = "";
         try {
             PreparedStatement pst = con.prepareStatement("select * from todo where id=?");
             pst.setInt(1, id);
@@ -70,7 +74,8 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
                 deadLineDate = rs.getDate(4);
                 ownerId = rs.getInt(5);
                 status=rs.getInt(6);
-                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status);
+                color = rs.getString(7);
+                toDoEntity = new ToDoEntity(id, title, assignDate, deadLineDate, ownerId,status, color);
             }
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,22 +87,23 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
     public boolean insert(ToDoEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status) values (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pst = con.prepareStatement("insert into todo (title,assignDate,deadLineDate,ownerId,status,color) values (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
             pst.setInt(5, entity.getStatus());
+            pst.setString(6, entity.getColor());
             rows_affected = pst.executeUpdate();
-            
+
             if (rows_affected > 0) {
                 ResultSet resultSet = pst.getGeneratedKeys();
-                if(resultSet.next()){
+                if (resultSet.next()) {
                     entity.setId(resultSet.getInt(1));
                     return true;
                 }
-            } 
-            
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,16 +112,17 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
 
     @Override
     public boolean update(ToDoEntity entity) {
-             int rows_affected = 0;
+        int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = con.prepareStatement("update todo set title = ?,assignDate = ?,deadLineDate = ?,ownerId = ?,status = ? where id = ?");
+                    = con.prepareStatement("update todo set title = ?,assignDate = ?,deadLineDate = ?,ownerId = ?,status = ?, color = ? where id = ?");
             pst.setString(1, entity.getTitle());
             pst.setDate(2, entity.getAssignDate());
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
             pst.setInt(5, entity.getStatus());
             pst.setInt(6, entity.getId());
+            pst.setString(7, entity.getColor());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -144,28 +151,26 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
         }
     }
 
-    public ArrayList<ToDoEntity> findByOwnerId(int ownerId){
+    public ArrayList<ToDoEntity> findByOwnerId(int ownerId) {
         ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
-        
-        try{
+
+        try {
             String query = "SELECT * FROM [todoDB].[dbo].[todo] WHERE ownerId = ?";
             PreparedStatement preparedStatement = con.prepareStatement(query);
-            
             preparedStatement.setInt(1, ownerId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            
+            ResultSet resultSet = preparedStatement.executeQuery();       
             while(resultSet.next())
-                todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), ownerId, resultSet.getInt("status")));
+                todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), ownerId, resultSet.getInt("status"), resultSet.getString("color")));
         }catch(SQLException ex){
             ex.printStackTrace();
         }
         return todos;
     }
-    
-    public ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId){
+
+    public ArrayList<ToDoEntity> findAllUserCollaboratedInTodos(int userId) {
         ArrayList<ToDoEntity> todos = new ArrayList<ToDoEntity>();
         try{
-             String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status\n" +
+             String query = "SELECT t.id, t.title, t.assignDate, t.deadLineDate, t.ownerId, t.status, t.color\n" +
                             "FROM [todoDB].[dbo].[todo] AS t, [todoDB].[dbo].[user_collaborate_todo] AS uct\n" +
                             "WHERE  t.id = uct.todoId AND uct.collaboratorUserId = ?;";
              
@@ -174,28 +179,48 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
              
              ResultSet resultSet = preparedStatement.executeQuery();
              while(resultSet.next())
-                 todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), resultSet.getInt("ownerId"), resultSet.getInt("status")));
+                 todos.add(new ToDoEntity(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getDate("assignDate"), resultSet.getDate("deadLineDate"), resultSet.getInt("ownerId"), resultSet.getInt("status"), resultSet.getString("color")));
                  
          }catch(SQLException ex){
              ex.printStackTrace();
          }
          return todos;
     }
-    
-    public boolean insertUserTodoCollaboration(int userId, int todoId){
+
+    public boolean insertUserTodoCollaboration(int userId, int todoId) {
         try {
             String query = "INSERT INTO [todoDB].[dbo].[user_collaborate_todo] (collaboratorUserId, todoId) VALUES (?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(query);
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, todoId);
-            
-            if(preparedStatement.executeUpdate() > 0)
+
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
+            }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return false;
     }
+
+    public boolean deleteUserTodoCollaboration(int userId, int todoId) {
+        try {
+            String query = "DELETE FROM [todoDB].[dbo].[user_collaborate_todo] WHERE userId = ? AND todoId = ? ";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, todoId);
+
+            if (preparedStatement.executeUpdate() > 0) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
 }
 /*
     EmanKamal
