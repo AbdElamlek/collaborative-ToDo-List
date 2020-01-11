@@ -20,6 +20,7 @@ import Handlers.ToDoCreationHandler;
 import Handlers.ToDoDeleteHandler;
 import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
+import Handlers.TaskCreationHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
 import java.io.BufferedReader;
@@ -120,6 +121,9 @@ public class SocketHandler extends Thread {
                 case "delete todo list":
                     //broadCast(jsonObjectStr);
                     actionHandler = new ToDoDeleteHandler();
+                    break;
+                case "createNewTask":
+                    actionHandler = new TaskCreationHandler();
                     break;
                 case "assigonToTaskRequest":
                     actionHandler = new AssignTaskHandler();
