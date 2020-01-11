@@ -6,13 +6,12 @@
 package Connection;
 
 import ControllerBase.ActionHandler;
-import DAOController.UserController;
-import Entities.NotificationEntity;
-import Entities.UserEntity;
 import Handlers.AcceptCollaboratorRequestHandler;
 import Handlers.AcceptTaskHandler;
 import Handlers.AddCollaboratorRequestHandler;
+import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
+import Handlers.FriendHandler;
 import Handlers.LoginHandler;
 import Handlers.RejectCollaboratorRequestHandler;
 import Handlers.NotificationHandler;
@@ -21,17 +20,17 @@ import Handlers.ToDoCreationHandler;
 import Handlers.ToDoDeleteHandler;
 import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
+import Handlers.TaskCreationHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
-import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,7 +44,7 @@ public class SocketHandler extends Thread {
     private BufferedReader input;
     private PrintStream output;
     private boolean isRuning = true;
-    private static Vector<SocketHandler> socketHandlers = new Vector<>();
+    public static Vector<SocketHandler> socketHandlers = new Vector<>();
     private int userId;
 
     public SocketHandler(Socket socket) {
@@ -123,6 +122,9 @@ public class SocketHandler extends Thread {
                     //broadCast(jsonObjectStr);
                     actionHandler = new ToDoDeleteHandler();
                     break;
+                case "createNewTask":
+                    actionHandler = new TaskCreationHandler();
+                    break;
                 case "assigonToTaskRequest":
                     actionHandler = new AssignTaskHandler();
                     break;
@@ -147,6 +149,11 @@ public class SocketHandler extends Thread {
                 case "reject collaborator request":
                     actionHandler = new RejectCollaboratorRequestHandler();
                     break;
+                case "searchFriend":
+                    actionHandler = new FriendHandler();
+                    break;
+                case "addFriend":
+                    actionHandler = new AddFriendHandler();
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
@@ -172,5 +179,24 @@ public class SocketHandler extends Thread {
         }
     }
     /*abd-elamelk */
+    
+    /* ahmedpro */
+    public static List<Integer> getOnlineIds() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < socketHandlers.size(); i++)
+            list.add(socketHandlers.get(i).userId);
+        return list;
+    }
+    
+    public void printResponse(String responsString) {
+        
+        output.println(responsString);
+    }
+    
+    public int getUserId() {
+        return userId;
+    }
+    
+    /* ahmedpro */
 
 }
