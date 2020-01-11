@@ -6,10 +6,11 @@
 package Handlers;
 
 import ControllerBase.ActionHandler;
+import DAOController.CollaboratorRequestController;
 import DAOController.CommentController;
 import DAOController.ItemController;
 import DAOController.NotificationController;
-import DAOController.RequestController;
+import DAOController.FriendRequestController;
 import DAOController.TaskController;
 import DAOController.ToDoController;
 import DAOController.UserController;
@@ -65,7 +66,7 @@ public class LoginHandler implements ActionHandler{
                 
                 ArrayList<ToDoEntity> userTodoLists = todoController.findByOwnerId(retrievedUser.getId());
                 for(ToDoEntity todo : userTodoLists){
-                    todo.setClllaboratorList(userController.findAllListCollaborators(todo.getId()));
+                    todo.setCollaboratorList(userController.findAllListCollaborators(todo.getId()));
                     ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
                     
                     for(ItemEntity item : todoItems){
@@ -92,7 +93,7 @@ public class LoginHandler implements ActionHandler{
                     }
                     todo.setItemsList(todoItems);  
                 }
-                retrievedUser.setColaboartedList(collaborationTodoLists);
+                retrievedUser.setCollaboratorList(collaborationTodoLists);
                 
                 retrievedUser.setTasksList(taskController.findAllUserAssignedTasks(retrievedUser.getId()));
 
@@ -101,8 +102,14 @@ public class LoginHandler implements ActionHandler{
                 NotificationController notificationController = new NotificationController();
                 retrievedUser.setNotificationList(notificationController.findByReceiverId(retrievedUser.getId()));
 
-                RequestController requestController = new RequestController();
-                retrievedUser.setRequestList(requestController.findByReceiverId(retrievedUser.getId()));   
+                FriendRequestController friendRequestController = new FriendRequestController();
+                retrievedUser.setFriendRequestList(friendRequestController.findByReceiverId(retrievedUser.getId()));  
+                
+                CollaboratorRequestController collaboratorRequestController = new CollaboratorRequestController();
+                retrievedUser.setCollaborationRequestList(collaboratorRequestController.findByReceiverId(retrievedUser.getId()));
+                
+                //TaskAssignmentRequestController taskAssignmentRequestController = new TaskAssignmentRequestController();
+                //retrievedUser.setTaskAssignmentRequestList(taskAssignmentRequestController.findByReceiverId(retrievedUser.getId()));
             }
             String responseJsonObject = gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser));
             System.out.println("response Json before send: " + responseJsonObject);
