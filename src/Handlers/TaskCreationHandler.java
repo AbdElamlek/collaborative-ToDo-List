@@ -7,6 +7,7 @@ package Handlers;
 
 import ControllerBase.ActionHandler;
 import DAOController.TaskController;
+import Entities.EntityWrapper;
 import Entities.TaskEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +34,8 @@ public class TaskCreationHandler implements ActionHandler{
                 TaskEntity taskEntity = gson.fromJson(requestTaskJsonObject, TaskEntity.class);
                 if(taskController.insert(taskEntity)){
                     System.out.println("inserted");
+                    String responseJsonObject = gson.toJson(new EntityWrapper("create task", "entity", taskEntity));
+                    printStream.println(responseJsonObject);
                 }
             } catch (JSONException ex) {
                 ex.printStackTrace();

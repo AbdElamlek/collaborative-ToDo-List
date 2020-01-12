@@ -36,10 +36,10 @@ private Accept_RejectTaskController accept_RejectTaskController;
                 String requestTaskJsonObject  = jsonObject.getJSONObject("entity").toString();
                 System.out.println("******json: "+requestTaskJsonObject);
                 Accept_RejectTaskDTO acceptTaskDTO = gson.fromJson(requestTaskJsonObject, Accept_RejectTaskDTO.class);
-                if(taskController.insertUserTaskAssignment(acceptTaskDTO.getUserId(),acceptTaskDTO.getTaskId())){
+                if(taskController.insertUserTaskAssignment(acceptTaskDTO.getUserId(),acceptTaskDTO.getTask().getId())){
                     System.out.println("inserted");
                     Accept_RejectTaskEntity accept_RejectTaskEntity = new Accept_RejectTaskEntity();
-                    accept_RejectTaskEntity.setTaskId(acceptTaskDTO.getTaskId());
+                    accept_RejectTaskEntity.setTaskId(acceptTaskDTO.getTask().getId());
                     if(accept_RejectTaskController.delete(accept_RejectTaskEntity)){
                         System.out.println("request deleted");
                     }
