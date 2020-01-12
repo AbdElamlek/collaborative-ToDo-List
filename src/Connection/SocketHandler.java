@@ -11,13 +11,10 @@ import Handlers.AcceptTaskHandler;
 import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
-<<<<<<< HEAD
 import Handlers.ItemCreationHandler;
 import Handlers.ItemDeleteHandler;
 import Handlers.ItemUpdateHandler;
-=======
 import Handlers.FriendHandler;
->>>>>>> 8cb5627222f40df60628e890d02a7a8a98b7ff2f
 import Handlers.LoginHandler;
 import Handlers.RejectCollaboratorRequestHandler;
 import Handlers.NotificationHandler;
@@ -155,7 +152,7 @@ public class SocketHandler extends Thread {
                 case "reject collaborator request":
                     actionHandler = new RejectCollaboratorRequestHandler();
                     break;
-<<<<<<< HEAD
+
                 case "create item":
                     actionHandler = new ItemCreationHandler();
                     break;
@@ -168,13 +165,11 @@ public class SocketHandler extends Thread {
                     actionHandler = new ItemDeleteHandler();
                     break;
                     
-=======
                 case "searchFriend":
                     actionHandler = new FriendHandler();
                     break;
                 case "addFriend":
                     actionHandler = new AddFriendHandler();
->>>>>>> 8cb5627222f40df60628e890d02a7a8a98b7ff2f
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
