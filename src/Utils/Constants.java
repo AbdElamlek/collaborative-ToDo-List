@@ -11,7 +11,7 @@ package Utils;
  */
 public class Constants {
     
-    public static final String DBUserName = "test";
+    public static final String DBUserName = "todolistUser";
     public static final String DBPassword = "root";
     public static final String DBUrl = "jdbc:sqlserver://localhost:1433;databaseName=todoDB;user="+DBUserName+";password="+DBPassword;
     public static final String schemaName ="[todoDB].[dbo]";    
