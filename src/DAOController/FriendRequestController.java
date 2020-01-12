@@ -150,7 +150,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
 
         try {
             String query = "SELECT *\n"
-                    + "FROM [todoDB].[dbo].[request]\n"
+                    + "FROM [todoDB].[dbo].[friend_request]\n"
                     + "WHERE receiverUserId = ?;";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, receiverId);

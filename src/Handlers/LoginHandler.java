@@ -6,6 +6,7 @@
 package Handlers;
 
 import ControllerBase.ActionHandler;
+import DAOController.CollaboratorRequestController;
 import DAOController.CommentController;
 import DAOController.ItemController;
 import DAOController.NotificationController;
@@ -92,7 +93,7 @@ public class LoginHandler implements ActionHandler{
                     }
                     todo.setItemsList(todoItems);  
                 }
-                retrievedUser.setCollaboartedList(collaborationTodoLists);
+                retrievedUser.setCollaboratorList(collaborationTodoLists);
                 
                 retrievedUser.setTasksList(taskController.findAllUserAssignedTasks(retrievedUser.getId()));
 
@@ -101,8 +102,14 @@ public class LoginHandler implements ActionHandler{
                 NotificationController notificationController = new NotificationController();
                 retrievedUser.setNotificationList(notificationController.findByReceiverId(retrievedUser.getId()));
 
-                FriendRequestController requestController = new FriendRequestController();
-                retrievedUser.setRequestList(requestController.findByReceiverId(retrievedUser.getId()));   
+                FriendRequestController friendRequestController = new FriendRequestController();
+                retrievedUser.setFriendRequestList(friendRequestController.findByReceiverId(retrievedUser.getId()));  
+                
+                CollaboratorRequestController collaboratorRequestController = new CollaboratorRequestController();
+                retrievedUser.setCollaborationRequestList(collaboratorRequestController.findByReceiverId(retrievedUser.getId()));
+                
+                //TaskAssignmentRequestController taskAssignmentRequestController = new TaskAssignmentRequestController();
+                //retrievedUser.setTaskAssignmentRequestList(taskAssignmentRequestController.findByReceiverId(retrievedUser.getId()));
             }
             String responseJsonObject = gson.toJson(new EntityWrapper("logIn", "UserEntity", retrievedUser));
             System.out.println("response Json before send: " + responseJsonObject);
