@@ -32,7 +32,7 @@ public class withdrawFromTaskHandler implements ActionHandler{
                 String requestTaskJsonObject  = jsonObject.getJSONObject("entity").toString();
                 System.out.println("******json: "+requestTaskJsonObject);
                 Accept_RejectTaskDTO accept_RejectTaskDTO = gson.fromJson(requestTaskJsonObject, Accept_RejectTaskDTO.class);
-                if(taskController.deleteUserTaskAssignment(accept_RejectTaskDTO.getUserId(),accept_RejectTaskDTO.getTaskId())){
+                if(taskController.deleteUserTaskAssignment(accept_RejectTaskDTO.getUserId(),accept_RejectTaskDTO.getTask().getId())){
                     System.out.println("deleted");
                 }
             } catch (JSONException ex) {

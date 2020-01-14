@@ -11,6 +11,9 @@ import Handlers.AcceptTaskHandler;
 import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
+import Handlers.ItemCreationHandler;
+import Handlers.ItemDeleteHandler;
+import Handlers.ItemUpdateHandler;
 import Handlers.FriendHandler;
 import Handlers.LoginHandler;
 import Handlers.RejectCollaboratorRequestHandler;
@@ -150,6 +153,19 @@ public class SocketHandler extends Thread {
                 case "reject collaborator request":
                     actionHandler = new RejectCollaboratorRequestHandler();
                     break;
+
+                case "create item":
+                    actionHandler = new ItemCreationHandler();
+                    break;
+                case "update item":
+                    //broadCast(jsonObjectStr);
+                    actionHandler = new ItemUpdateHandler();
+                    break;
+                case "delete item":
+                    //broadCast(jsonObjectStr);
+                    actionHandler = new ItemDeleteHandler();
+                    break;
+                    
                 case "searchFriend":
                     actionHandler = new FriendHandler();
                     break;
