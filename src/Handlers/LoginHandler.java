@@ -67,6 +67,7 @@ public class LoginHandler implements ActionHandler{
                 ArrayList<ToDoEntity> userTodoLists = todoController.findByOwnerId(retrievedUser.getId());
                 for(ToDoEntity todo : userTodoLists){
                     todo.setCollaboratorList(userController.findAllListCollaborators(todo.getId()));
+                    todo.setRequestedCollaboratorList(userController.findAllListRequestedCollaborators(todo.getId()));
                     ArrayList<ItemEntity> todoItems = itemController.findByTodoId(todo.getId());
                     
                     for(ItemEntity item : todoItems){

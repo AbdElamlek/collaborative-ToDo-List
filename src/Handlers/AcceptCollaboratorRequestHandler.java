@@ -5,6 +5,7 @@
  */
 package Handlers;
 
+import Connection.SocketHandler;
 import ControllerBase.ActionHandler;
 import DAOController.AdapterController;
 import DAOController.CollaboratorRequestController;
@@ -12,6 +13,7 @@ import DAOController.ToDoController;
 import DAOController.UserController;
 import Entities.CollaborationRequestEntity;
 import Entities.CollaboratorDTO;
+import Entities.EntityWrapper;
 import Entities.ToDoEntity;
 import Entities.UserEntity;
 import com.google.gson.Gson;
@@ -34,25 +36,46 @@ public class AcceptCollaboratorRequestHandler implements ActionHandler {
         try {
             Gson gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
             JSONObject jsonObject = new JSONObject(requestJsonObject);
-            String collaboratorJsonObject = jsonObject.getJSONObject("entity").toString();
-            CollaboratorDTO collaboratorDTO = gson.fromJson(collaboratorJsonObject, CollaboratorDTO.class);
+            String collaborationRequestJsonObject = jsonObject.getJSONObject("entity").toString();
+            CollaborationRequestEntity collaborationRequestEntity = gson.fromJson(collaborationRequestJsonObject, CollaborationRequestEntity.class);
             
-            AdapterController ac = new AdapterController();
-            ToDoController tdc = new ToDoController();
-            UserController uc=new UserController();
-            CollaboratorRequestController crc=new CollaboratorRequestController();
+            int todoId = collaborationRequestEntity.getTodoId();
+            int senderId = collaborationRequestEntity.getSentUserId();
+            int receiverId = collaborationRequestEntity.getReceivedUserId();
             
-            CollaborationRequestEntity cre=crc.findById(collaboratorDTO.getReqId());
-            if (tdc.insertUserTodoCollaboration(cre.getReceivedUserId(), cre.getTodoId())) {
-                //collaborator is added successfully to todo
-                UserEntity collaboratorInfo=uc.findById(cre.getReceivedUserId());
-                crc.delete(cre);
-            }else{
-                //failed to add collaborator !
-            }
+            ToDoController toDoController = new ToDoController();
+            CollaboratorRequestController collaboratorRequestController = new CollaboratorRequestController();
+            UserController userController = new UserController();
+            
+            ArrayList<UserEntity> todoCollaborators = userController.findAllListCollaborators(todoId);
+            SocketHandler socketHandler;
+             
+            if(toDoController.insertUserTodoCollaboration(todoId, receiverId)){
+                collaboratorRequestController.delete(collaborationRequestEntity);
 
+                String responseJsonObject = gson.toJson(new EntityWrapper("accept collaborator request", "CollaboratorDTO", new CollaboratorDTO(userController.findById(receiverId), senderId, todoId)));
+
+                // SEND TO ALL OTHER ONLINE COLLABORATORS
+                
+                for(UserEntity collaborator : todoCollaborators){
+                    int indexOfCollaboratorId = SocketHandler.getOnlineIds().indexOf(collaborator.getId());
+
+                    if(indexOfCollaboratorId != -1){
+                      socketHandler = SocketHandler.socketHandlers.get(indexOfCollaboratorId);
+                      socketHandler.printResponse(responseJsonObject);
+                    }      
+                }
+                
+                //SEND TO OWNER IF ONLINE
+                
+                int indexOfOwnerId = SocketHandler.getOnlineIds().indexOf(senderId);
+                if(indexOfOwnerId != -1){
+                      socketHandler = SocketHandler.socketHandlers.get(indexOfOwnerId);
+                      socketHandler.printResponse(responseJsonObject);
+                }
+            }
         } catch (JSONException ex) {
-            Logger.getLogger(AcceptCollaboratorRequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 

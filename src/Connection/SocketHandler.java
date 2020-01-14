@@ -116,6 +116,7 @@ public class SocketHandler extends Thread {
                     break;
                 case "update todo list":
                     //broadCast(jsonObjectStr);
+                    System.out.println("to handler");
                     actionHandler = new ToDoUpdateHandler();
                     break;
                 case "delete todo list":

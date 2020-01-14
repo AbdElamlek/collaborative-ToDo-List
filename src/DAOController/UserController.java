@@ -241,4 +241,25 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         }
         return false;
     }
+    
+    public ArrayList<UserEntity> findAllListRequestedCollaborators(int todoId){
+        ArrayList<UserEntity> collaborators = new ArrayList<UserEntity>();
+        try {
+            String query = "SELECT u.id, u.username\n" +
+                           "FROM [todoDB].[dbo].[collaboration_request] AS cr, [todoDB].[dbo].[user] AS u\n" +
+                           "WHERE cr.receiverUserId = u.id AND cr.todoId = ?;";
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, todoId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                collaborators.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("username")));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return collaborators;
+    }
 }
