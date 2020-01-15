@@ -164,29 +164,5 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         }
         return requests;
     }
-    
-    
-    /* ahmedpro */
-    public UserEntity findByUserName(String userName) {
-        UserEntity userEntity = null;
-        try {
-            String query = "SELECT * FROM [todoDB].[dbo].[user] WHERE username = ?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, userName);
-            
-            ResultSet resultSet = preparedStatement.executeQuery();
-            userEntity = new UserEntity();
-            while (resultSet.next()) {
-                userEntity.setId(resultSet.getInt(1));
-                userEntity.setFirstName(resultSet.getString(2));
-                userEntity.setLastName(resultSet.getString(3));
-                userEntity.setUserName(resultSet.getString(4));
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-        
-        return userEntity;
-    }
 
 }
