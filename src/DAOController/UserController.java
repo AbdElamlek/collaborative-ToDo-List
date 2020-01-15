@@ -192,12 +192,18 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         ArrayList<UserEntity> friends = new ArrayList<UserEntity>();
 
         try {
-            String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n"
-                    + "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n"
-                    + "WHERE u.id = uf.friendId AND uf.userId = ?;";
+            String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n" +
+                            "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n" +
+                            "WHERE u.id = uf.friendId AND uf.userId = ? \n" +
+                            "UNION\n" +
+                            "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n" +
+                            "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n" +
+                            "WHERE u.id = uf.userId AND uf.friendId = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
             preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, userId);
+
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

@@ -23,7 +23,7 @@ public class UserEntity implements BaseEntity {
     private ArrayList<UserEntity> friendList;
     private ArrayList<RequestEntity> friendRequestList;
     private ArrayList<CollaborationRequestEntity> collaborationRequestList;
-    private ArrayList<RequestEntity> taskAssignmentRequestList;
+    private ArrayList<Accept_RejectTaskEntity> taskAssignmentRequestList;
     private ArrayList<NotificationEntity> notificationList;
     private ArrayList<TaskEntity> tasksList;
     private ArrayList<ToDoEntity> todoList;
@@ -155,11 +155,11 @@ public class UserEntity implements BaseEntity {
         this.collaborationRequestList = collaborationRequestList;
     }
 
-    public ArrayList<RequestEntity> getTaskAssignmentRequestList() {
+    public ArrayList<Accept_RejectTaskEntity> getTaskAssignmentRequestList() {
         return taskAssignmentRequestList;
     }
 
-    public void setTaskAssignmentRequestList(ArrayList<RequestEntity> taskAssignmnetRequest) {
+    public void setTaskAssignmentRequestList(ArrayList<Accept_RejectTaskEntity> taskAssignmnetRequest) {
         this.taskAssignmentRequestList = taskAssignmnetRequest;
     }
 

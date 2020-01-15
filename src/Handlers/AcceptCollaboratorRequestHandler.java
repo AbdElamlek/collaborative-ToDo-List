@@ -50,29 +50,46 @@ public class AcceptCollaboratorRequestHandler implements ActionHandler {
             ArrayList<UserEntity> todoCollaborators = userController.findAllListCollaborators(todoId);
             SocketHandler socketHandler;
              
-            if(toDoController.insertUserTodoCollaboration(todoId, receiverId)){
+            ToDoEntity todo = toDoController.findById(todoId);
+            String todoJsonObject = gson.toJson(new EntityWrapper("create todo list", "ToDoEntity", todo));
+            
+            if(toDoController.insertUserTodoCollaboration(receiverId, todoId)){
                 collaboratorRequestController.delete(collaborationRequestEntity);
 
                 String responseJsonObject = gson.toJson(new EntityWrapper("accept collaborator request", "CollaboratorDTO", new CollaboratorDTO(userController.findById(receiverId), senderId, todoId)));
 
                 // SEND TO ALL OTHER ONLINE COLLABORATORS
-                
-                for(UserEntity collaborator : todoCollaborators){
-                    int indexOfCollaboratorId = SocketHandler.getOnlineIds().indexOf(collaborator.getId());
 
-                    if(indexOfCollaboratorId != -1){
-                      socketHandler = SocketHandler.socketHandlers.get(indexOfCollaboratorId);
-                      socketHandler.printResponse(responseJsonObject);
+                for(UserEntity collaborator : todoCollaborators){
+
+                    if(SocketHandler.getOnlineIds().contains(collaborator.getId())){
+                        System.out.println("i found user : "+collaborator.getId());
+                        for (int i = 0; i < SocketHandler.socketHandlers.size(); i++) {
+                            if (SocketHandler.socketHandlers.get(i).getUserId() == collaborator.getId()) {
+                                socketHandler = SocketHandler.socketHandlers.get(i);
+                                System.out.println("socketId: " + socketHandler.getId());
+                                socketHandler.printResponse(responseJsonObject);
+                                break;
+                            }
+                        }
+
                     }      
                 }
-                
-                //SEND TO OWNER IF ONLINE
-                
-                int indexOfOwnerId = SocketHandler.getOnlineIds().indexOf(senderId);
-                if(indexOfOwnerId != -1){
-                      socketHandler = SocketHandler.socketHandlers.get(indexOfOwnerId);
-                      socketHandler.printResponse(responseJsonObject);
+
+                //SEND TO OWNER IF ONLINE AND TO COLLABORATOR
+
+
+                for (int i = 0; i < SocketHandler.socketHandlers.size(); i++) {
+                    if (SocketHandler.socketHandlers.get(i).getUserId() == senderId) {
+                        socketHandler = SocketHandler.socketHandlers.get(i);
+                        socketHandler.printResponse(responseJsonObject);
+                    }
+                    else if(SocketHandler.socketHandlers.get(i).getUserId() == receiverId){
+                        socketHandler = SocketHandler.socketHandlers.get(i);
+                        socketHandler.printResponse(todoJsonObject);
+                    }
                 }
+                
             }
         } catch (JSONException ex) {
             ex.printStackTrace();
