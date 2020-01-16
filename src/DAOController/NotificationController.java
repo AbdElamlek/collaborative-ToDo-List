@@ -33,7 +33,7 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
     public ArrayList<NotificationEntity> findAll() {
         int id = 0;
         Date time = null;
-        int type = 0;
+        String message = "";
         int receiverUserId = 0;
         int senderUserId = 0;
         ArrayList<NotificationEntity> notification_list = new ArrayList<NotificationEntity>();
@@ -43,10 +43,10 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
             while (rs.next()) {
                 id = rs.getInt(1);
                 time=rs.getDate(2);
-                type = rs.getInt(3);
-                receiverUserId = rs.getInt(4);
-                senderUserId = rs.getInt(5);
-                notification_list.add(new NotificationEntity(id, time, type, receiverUserId, senderUserId));
+                receiverUserId = rs.getInt(3);
+                senderUserId = rs.getInt(4);
+                message = rs.getString(5);
+                notification_list.add(new NotificationEntity(id, time, receiverUserId, senderUserId, message));
             }
         } catch (SQLException ex) {
             Logger.getLogger(NotificationController.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +57,7 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
     @Override
     public NotificationEntity findById(int id) {
         Date time = null;
-        int type = 0;
+        String message = "";
         int receiverUserId = 0;
         int senderUserId = 0;
         try {
@@ -67,10 +67,10 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
             while (rs.next()) {
                 id = rs.getInt(1);
                 time=rs.getDate(2);
-                type = rs.getInt(3);
-                receiverUserId = rs.getInt(4);
-                senderUserId = rs.getInt(5);
-                notificationEntity = new NotificationEntity(id, time, type, receiverUserId, senderUserId);
+                receiverUserId = rs.getInt(3);
+                senderUserId = rs.getInt(4);
+                message = rs.getString(5);
+                notificationEntity = new NotificationEntity(id, time, receiverUserId, senderUserId, message);
             }
         } catch (SQLException ex) {
             Logger.getLogger(NotificationController.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,11 +82,11 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
     public boolean insert(NotificationEntity entity) {
         int rows_affected = 0;
         try {
-            PreparedStatement pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[notification] (time, type,receiverUserId,senderUserId) VALUES (?,?,?,?)");
+            PreparedStatement pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[notification] (time, receiverUserId,senderUserId, message) VALUES (?,?,?,?)");
             pst.setDate(1, entity.getTime());
-            pst.setInt(2, entity.getType());
-            pst.setInt(3, entity.getReceivedUserId());
-            pst.setInt(4, entity.getSentUserId());
+            pst.setInt(2, entity.getReceivedUserId());
+            pst.setInt(3, entity.getSentUserId());
+            pst.setString(4, entity.getMessage());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(NotificationController.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,11 +103,11 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[notification] SET time = ?, type = ?, receiverUserId = ?,senderUserId=? WHERE id = ?");
+                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[notification] SET time = ?, receiverUserId = ?,senderUserId=?, message=? WHERE id = ?");
             pst.setDate(1, entity.getTime());
-            pst.setInt(2, entity.getType());
-            pst.setInt(3, entity.getReceivedUserId());
-            pst.setInt(4, entity.getSentUserId());
+            pst.setInt(2, entity.getReceivedUserId());
+            pst.setInt(3, entity.getSentUserId());
+            pst.setString(4, entity.getMessage());
             pst.setInt(5,entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
@@ -149,7 +149,7 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                notifications.add(new NotificationEntity(resultSet.getInt("id"), resultSet.getDate("time"), resultSet.getInt("type"), resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId")));
+                notifications.add(new NotificationEntity(resultSet.getInt("id"), resultSet.getDate("time"), resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId"), resultSet.getString("message")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
