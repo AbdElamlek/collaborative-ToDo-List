@@ -11,6 +11,7 @@ import DAOController.FriendRequestController;
 import Entities.EntityWrapper;
 import Entities.FriendRequestEntity;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ public class AddFriendHandler implements ActionHandler {
 
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         FriendRequestController frc = new FriendRequestController();
         try {
 
@@ -33,14 +34,17 @@ public class AddFriendHandler implements ActionHandler {
             // Get request entity string from json.
             String requestEntityJson = jsonObject.getJSONObject("entity").toString();
             FriendRequestEntity requestEntity = gson.fromJson(requestEntityJson, FriendRequestEntity.class);
+            System.out.println(requestEntity.getTime());
 
             // Insert request into friend request table. The result may be true
             // or false if it true then the request is inserted, else the request
             // is already exist
-            boolean result = frc.insert(requestEntity);
-            if (result) {
-                int receivedUserId = requestEntity.getReceivedUserId();
-                int sentUserId = requestEntity.getSentUserId();
+            int receivedUserId = requestEntity.getReceivedUserId();
+            int sentUserId = requestEntity.getSentUserId();
+            boolean result = frc.isRequestExist(receivedUserId, sentUserId);
+            // The friend request is not exist
+            if (!result) {
+                frc.insert(requestEntity);
 
                 // Check if the receiving user is online
                 boolean isOnline = false;
@@ -63,13 +67,14 @@ public class AddFriendHandler implements ActionHandler {
 
             } else {
                 // Request is already sent
+                System.out.println("is alerady inserted");
                 requestEntity.setId(-1);
-                EntityWrapper entityWrapper = 
-                        new EntityWrapper("addFriend", "FriendRequestEntity", requestEntity);
+                EntityWrapper entityWrapper
+                        = new EntityWrapper("addFriend", "FriendRequestEntity", requestEntity);
                 String entityWrapperJson = gson.toJson(entityWrapper);
                 printStream.println(entityWrapperJson);
             }
-            
+
         } catch (JSONException ex) {
             System.out.println(ex);
         }

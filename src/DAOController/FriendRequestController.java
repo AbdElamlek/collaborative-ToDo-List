@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +81,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         int rows_affected = 0;
         PreparedStatement pst=null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId) VALUES (?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
@@ -163,6 +164,23 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
             ex.printStackTrace();
         }
         return requests;
+    }
+    
+    public boolean isRequestExist(int receivedUserId, int sentUserId) {
+        
+        try {
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
+            pst.setInt(1, receivedUserId);
+            pst.setInt(2, sentUserId);
+            ResultSet rs = pst.executeQuery();
+            if (rs != null) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
     }
 
 }
