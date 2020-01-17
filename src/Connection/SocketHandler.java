@@ -24,6 +24,7 @@ import Handlers.ToDoDeleteHandler;
 import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
 import Handlers.TaskCreationHandler;
+import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
 import java.io.BufferedReader;
@@ -125,7 +126,7 @@ public class SocketHandler extends Thread {
                     //broadCast(jsonObjectStr);
                     actionHandler = new ToDoDeleteHandler();
                     break;
-                case "createNewTask":
+                case "create task":
                     actionHandler = new TaskCreationHandler();
                     break;
                 case "assigonToTaskRequest":
@@ -170,6 +171,11 @@ public class SocketHandler extends Thread {
                     break;
                 case "addFriend":
                     actionHandler = new AddFriendHandler();
+                    break;
+                case "delete task":
+                    actionHandler = new TaskDeleteHandler();
+                    break;
+                   
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {

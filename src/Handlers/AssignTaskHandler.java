@@ -52,7 +52,14 @@ public class AssignTaskHandler implements ActionHandler{
                      if(onLineUsers.contains(notificationEntity.getReceivedUserId())){
                         EntityWrapper entityWrapper = new EntityWrapper("notification", "entity", notificationEntity);
                         String notoficationJsonResponse = gson.toJson(entityWrapper);
-                        SocketHandler.socketHandlers.get(onLineUsers.indexOf(notificationEntity.getReceivedUserId())).printResponse(notoficationJsonResponse);
+                        for(int i =0; i< SocketHandler.socketHandlers.size();i++){
+                            if(SocketHandler.socketHandlers.get(i).getUserId()== notificationEntity.getReceivedUserId()){
+                                SocketHandler.socketHandlers.get(i).printResponse(notoficationJsonResponse);
+                                break;
+                            }
+                        }
+                        
+                        
                      }
                  }
              }

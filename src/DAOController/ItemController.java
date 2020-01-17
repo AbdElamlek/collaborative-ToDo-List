@@ -12,7 +12,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -62,13 +65,27 @@ public class ItemController<ItemDAO> implements BaseDAO<ItemEntity>{
     public boolean insert(ItemEntity entity) {
         try {
             String query = "INSERT INTO [todoDB].[dbo].[item] (title, description, todoId) VALUES (?, ?, ?)";
-            preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getDecription());
             preparedStatement.setInt(3, entity.getTodoId());
             
-            return (preparedStatement.executeUpdate() > 0);
+            int effectedRows = preparedStatement.executeUpdate();
+            
+            if(effectedRows>0){
+                 ResultSet rs2;
+            
+                rs2 = preparedStatement.getGeneratedKeys();
+                if(rs2.next()){
+                    int itemId = rs2.getInt(1);
+                    entity.setId(itemId);
+                }
+                return true;
+            }
+           
+                
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         } 
