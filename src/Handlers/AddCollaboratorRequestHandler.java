@@ -70,10 +70,6 @@ public class AddCollaboratorRequestHandler implements ActionHandler {
                 } else {
                     //insertion failed !
                 }
-                //System.out.println("server " + cre.getId());
-                //String reqJson = ac.entity2Json(new EntityWrapper("add collaborator request", "CollaborationRequestEntity", cre));
-                //System.out.println("server sent reqjson: " + reqJson);
-                //printStream.println(reqJson);
             } else {
                 //request hasn't been added!
             }

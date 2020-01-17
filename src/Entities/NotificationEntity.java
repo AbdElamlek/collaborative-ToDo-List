@@ -7,6 +7,7 @@ package Entities;
 
 import java.sql.Date;
 
+
 /**
  *
  * @author Abd-Elmalek
@@ -15,19 +16,30 @@ public class NotificationEntity implements BaseEntity {
     
     private int id;
     private Date time;
+<<<<<<< HEAD
     private String msg;
+=======
+>>>>>>> a72eb6ac249bf04fce5d2e7e8149569ee0944a33
     private int receivedUserId;
     private int sentUserId;
+    private String message;
 
     public NotificationEntity() {
     }
 
+<<<<<<< HEAD
     public NotificationEntity(int id, Date time, String msg, int receivedUserId, int sentUserId) {
         this.id = id;
         this.time = time;
         this.msg = msg;
+=======
+    public NotificationEntity(int id, Date time, int receivedUserId, int sentUserId, String message) {
+        this.id = id;
+        this.time = time;
+>>>>>>> a72eb6ac249bf04fce5d2e7e8149569ee0944a33
         this.receivedUserId = receivedUserId;
         this.sentUserId = sentUserId;
+        this.message = message;
     }
 
     public void setId(int id) {
@@ -38,9 +50,13 @@ public class NotificationEntity implements BaseEntity {
         this.time = time;
     }
 
+<<<<<<< HEAD
     public void setMsg(String msg) {
         this.msg= msg;
     }
+=======
+
+>>>>>>> a72eb6ac249bf04fce5d2e7e8149569ee0944a33
 
     public void setReceivedUserId(int receivedUserId) {
         this.receivedUserId = receivedUserId;
@@ -58,9 +74,13 @@ public class NotificationEntity implements BaseEntity {
         return time;
     }
 
+<<<<<<< HEAD
     public String getMsg() {
         return msg;
     }
+=======
+
+>>>>>>> a72eb6ac249bf04fce5d2e7e8149569ee0944a33
 
     public int getReceivedUserId() {
         return receivedUserId;
@@ -69,6 +89,15 @@ public class NotificationEntity implements BaseEntity {
     public int getSentUserId() {
         return sentUserId;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
     
     
 }

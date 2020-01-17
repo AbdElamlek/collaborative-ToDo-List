@@ -43,16 +43,24 @@ public class ToDoUpdateHandler implements ActionHandler{
             todoController.update(todo);
             
             String responseJsonObject = gson.toJson(new EntityWrapper("update todo list", "ToDoEntity", todo));
-            
+            //supposing that ownly the owner can update it 
             ArrayList<UserEntity> todoCollaborators = userController.findAllListCollaborators(todo.getId());
             SocketHandler socketHandler;
-            
+
             for(UserEntity collaborator : todoCollaborators){
                 int indexOfCollaboratorId = SocketHandler.getOnlineIds().indexOf(collaborator.getId());
                 
                 if(indexOfCollaboratorId != -1){
-                  socketHandler = SocketHandler.socketHandlers.get(indexOfCollaboratorId);
-                  socketHandler.printResponse(responseJsonObject);
+                    System.out.println("i found user : "+collaborator.getId());
+                  for (int i = 0; i < SocketHandler.socketHandlers.size(); i++) {
+                      if (SocketHandler.socketHandlers.get(i).getUserId() == collaborator.getId()) {
+                          socketHandler = SocketHandler.socketHandlers.get(i);
+                          System.out.println("socketId: " + socketHandler.getId());
+                          socketHandler.printResponse(responseJsonObject);
+                          break;
+                      }
+                  }
+                  
                 }      
             }
         }catch(JSONException ex){

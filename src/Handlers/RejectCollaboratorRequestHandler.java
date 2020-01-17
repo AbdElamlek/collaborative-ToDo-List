@@ -28,14 +28,14 @@ public class RejectCollaboratorRequestHandler implements ActionHandler {
         try {
             Gson gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
             JSONObject jsonObject = new JSONObject(requestJsonObject);
-            String collaboratorJsonObject = jsonObject.getJSONObject("entity").toString();
-            CollaboratorDTO collaboratorDTO = gson.fromJson(collaboratorJsonObject, CollaboratorDTO.class);
-            CollaboratorRequestController crc=new CollaboratorRequestController();
-            CollaborationRequestEntity cre=crc.findById(collaboratorDTO.getReqId());
-            crc.delete(cre);
- 
+            String collaborationRequestJsonObject = jsonObject.getJSONObject("entity").toString();
+            CollaborationRequestEntity collaborationRequestEntity = gson.fromJson(collaborationRequestJsonObject, CollaborationRequestEntity.class);
+            
+            CollaboratorRequestController collaboratorRequestController = new CollaboratorRequestController();
+            
+            collaboratorRequestController.delete(collaborationRequestEntity);
         } catch (JSONException ex) {
-            Logger.getLogger(RejectCollaboratorRequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 

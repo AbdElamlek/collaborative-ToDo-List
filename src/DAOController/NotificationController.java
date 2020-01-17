@@ -48,6 +48,7 @@ public class NotificationController<NotificationDAO> implements BaseDAO<Notifica
                 senderUserId = rs.getInt(4);
                 msg = rs.getString(5);
                 notification_list.add(new NotificationEntity(id, time, msg, receiverUserId, senderUserId));
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(NotificationController.class.getName()).log(Level.SEVERE, null, ex);
