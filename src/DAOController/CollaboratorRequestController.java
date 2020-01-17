@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +46,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
                 receiverUserId = rs.getInt(3);
                 senderUserId = rs.getInt(4);
                 todoId = rs.getInt(5);
-                request_list.add(new CollaborationRequestEntity(todoId, id, time,receiverUserId, senderUserId));
+                request_list.add(new CollaborationRequestEntity(todoId, id, time, receiverUserId, senderUserId));
             }
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,7 +83,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
         int rows_affected = 0;
         PreparedStatement pst = null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[collaboration_request] (time, receiverUserId,senderUserId,todoId) VALUES (?,?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[collaboration_request] (time, receiverUserId,senderUserId,todoId) VALUES (?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
@@ -92,10 +93,21 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
+            try {
+                ResultSet rs2 = pst.getGeneratedKeys();
+                if (rs2.next()) {
+                    int reqId = rs2.getInt(1);
+                    entity.setId(reqId);
+                    System.out.println(reqId);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return true;
         } else {
             return false;
         }
+
     }
 
     @Override
@@ -127,8 +139,10 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
             PreparedStatement pst = connection.prepareStatement("DELETE FROM [todoDB].[dbo].[collaboration_request] WHERE id = ?");
             pst.setInt(1, entity.getId());
             rows_affected = pst.executeUpdate();
+
         } catch (SQLException ex) {
-            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FriendRequestController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         if (rows_affected > 0) {
             return true;
@@ -149,7 +163,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
 
             ResultSet rs = preparedStatement.executeQuery();
             Date time = null;
-            int id=0;
+            int id = 0;
             int senderUserId = 0;
             int todoId = 0;
             while (rs.next()) {

@@ -192,12 +192,18 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         ArrayList<UserEntity> friends = new ArrayList<UserEntity>();
 
         try {
-            String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n"
-                    + "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n"
-                    + "WHERE u.id = uf.friendId AND uf.userId = ?;";
+            String query = "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n" +
+                            "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n" +
+                            "WHERE u.id = uf.friendId AND uf.userId = ? \n" +
+                            "UNION\n" +
+                            "SELECT u.id, u.firstName, u.lastName, u.username, u.email, u.password\n" +
+                            "FROM [todoDB].[dbo].[user] AS u, [todoDB].[dbo].[user_friend] As uf\n" +
+                            "WHERE u.id = uf.userId AND uf.friendId = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
             preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, userId);
+
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -240,5 +246,26 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
             ex.printStackTrace();
         }
         return false;
+    }
+    
+    public ArrayList<UserEntity> findAllListRequestedCollaborators(int todoId){
+        ArrayList<UserEntity> collaborators = new ArrayList<UserEntity>();
+        try {
+            String query = "SELECT u.id, u.username\n" +
+                           "FROM [todoDB].[dbo].[collaboration_request] AS cr, [todoDB].[dbo].[user] AS u\n" +
+                           "WHERE cr.receiverUserId = u.id AND cr.todoId = ?;";
+
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, todoId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                collaborators.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("username")));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return collaborators;
     }
 }

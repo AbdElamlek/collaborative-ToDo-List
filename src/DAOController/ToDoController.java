@@ -112,6 +112,7 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
 
     @Override
     public boolean update(ToDoEntity entity) {
+        System.out.println("updating....");
         int rows_affected = 0;
         try {
             PreparedStatement pst
@@ -121,8 +122,9 @@ public class ToDoController<ToDoDAO> implements BaseDAO<ToDoEntity> {
             pst.setDate(3, entity.getDeadLineDate());
             pst.setInt(4, entity.getOwnerId());
             pst.setInt(5, entity.getStatus());
-            pst.setInt(6, entity.getId());
-            pst.setString(7, entity.getColor());
+            pst.setString(6, entity.getColor());
+            pst.setInt(7, entity.getId());
+            
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();

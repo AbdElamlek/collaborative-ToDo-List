@@ -24,6 +24,7 @@ public class ToDoEntity implements BaseEntity {
     private String color;
     
     private ArrayList<UserEntity> collaboratorList;
+    private ArrayList<UserEntity> requestedCollaboratorList;
     private ArrayList<ItemEntity> itemsList;
 
     public ToDoEntity() {
@@ -109,6 +110,14 @@ public class ToDoEntity implements BaseEntity {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public ArrayList<UserEntity> getRequestedCollaboratorList() {
+        return requestedCollaboratorList;
+    }
+
+    public void setRequestedCollaboratorList(ArrayList<UserEntity> requestedCollaboratorList) {
+        this.requestedCollaboratorList = requestedCollaboratorList;
     }
     
 }

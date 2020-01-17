@@ -21,7 +21,7 @@ public class AdapterController implements AdapterInterface {
 
     public AdapterController() {
         gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.serializeNulls().create();
+        gson = gsonBuilder.serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
         
     }
 

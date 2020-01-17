@@ -7,6 +7,7 @@ package Entities;
 
 import java.sql.Date;
 
+
 /**
  *
  * @author Abd-Elmalek
@@ -15,17 +16,19 @@ public class NotificationEntity implements BaseEntity {
     
     private int id;
     private Date time;
-    private int type;
+    private String msg;
     private int receivedUserId;
     private int sentUserId;
+    
 
     public NotificationEntity() {
     }
 
-    public NotificationEntity(int id, Date time, int type, int receivedUserId, int sentUserId) {
+
+    public NotificationEntity(int id, Date time, String msg, int receivedUserId, int sentUserId) {
         this.id = id;
         this.time = time;
-        this.type = type;
+        this.msg = msg;
         this.receivedUserId = receivedUserId;
         this.sentUserId = sentUserId;
     }
@@ -38,8 +41,8 @@ public class NotificationEntity implements BaseEntity {
         this.time = time;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setMsg(String msg) {
+        this.msg= msg;
     }
 
     public void setReceivedUserId(int receivedUserId) {
@@ -57,18 +60,15 @@ public class NotificationEntity implements BaseEntity {
     public Date getTime() {
         return time;
     }
-
-    public int getType() {
-        return type;
+    public String getMsg() {
+        return msg;
     }
-
     public int getReceivedUserId() {
         return receivedUserId;
     }
 
     public int getSentUserId() {
         return sentUserId;
-    }
-    
+    }    
     
 }
