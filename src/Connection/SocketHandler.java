@@ -27,6 +27,7 @@ import Handlers.TaskCreationHandler;
 import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
+import Handlers.LogoutHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -84,11 +85,20 @@ public class SocketHandler extends Thread {
                 System.out.println("received json: "+recievedString);
 
                 /*eman kamal*/
-                handleResponse(recievedString);
+                if(recievedString != null){
+                    handleResponse(recievedString);
+                    isRuning = true;
+                }
+                else{
+                    socketHandlers.remove(this);
+                    isRuning = false;
 
+                }
                 /*eman kamal*/
-                isRuning = true;
+                
             } catch (IOException ex) {
+                socketHandlers.remove(this);
+                isRuning = false;
                 System.out.println(ex);
             }
         }
@@ -173,10 +183,14 @@ public class SocketHandler extends Thread {
                 case "addFriend":
                     actionHandler = new AddFriendHandler();
                     break;
+                case "logout":
+                    actionHandler = new LogoutHandler();
+                    break;
                 case "delete task":
                     actionHandler = new TaskDeleteHandler();
                     break;
                    
+
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {

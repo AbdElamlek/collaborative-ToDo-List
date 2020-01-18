@@ -5,6 +5,7 @@
  */
 package Handlers;
 
+import Connection.SocketHandler;
 import ControllerBase.ActionHandler;
 import DAOController.CollaboratorRequestController;
 import DAOController.CommentController;
@@ -92,13 +93,30 @@ public class LoginHandler implements ActionHandler{
                             task.setCommentsList(commentController.findByTaskId(task.getId()));
                         item.setTasksList(tasks);
                     }
-                    todo.setItemsList(todoItems);  
+                    todo.setItemsList(todoItems);
+                    todo.setCollaboratorList(userController.findAllListCollaborators(todo.getId()));
                 }
                 retrievedUser.setCollaboratorList(collaborationTodoLists);
                 
                 retrievedUser.setTasksList(taskController.findAllUserAssignedTasks(retrievedUser.getId()));
 
                 retrievedUser.setFriendList(userController.findAllUserFriends(retrievedUser.getId()));
+               
+                String friendOnlineJsonObject = gson.toJson(new EntityWrapper("online friend", "UserEntity", new UserEntity(retrievedUser.getId(), retrievedUser.getUserName())));    
+                SocketHandler socketHandler;
+                
+                for(UserEntity friend : retrievedUser.getFriendList()){
+                    if(SocketHandler.getOnlineIds().contains(friend.getId())){
+                        friend.setUserStatus(1);
+                        
+                        int i = 0;
+                        while((SocketHandler.socketHandlers.get(i).getUserId()) != friend.getId())
+                            i++;
+                        
+                        socketHandler = SocketHandler.socketHandlers.get(i);
+                        socketHandler.printResponse(friendOnlineJsonObject);
+                    }
+                }
 
                 NotificationController notificationController = new NotificationController();
                 retrievedUser.setNotificationList(notificationController.findByReceiverId(retrievedUser.getId()));

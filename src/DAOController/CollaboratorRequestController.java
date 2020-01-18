@@ -48,7 +48,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
                 senderUserId = rs.getInt(4);
                 todoId = rs.getInt(5);
                 message=rs.getString(6);
-                request_list.add(new CollaborationRequestEntity(todoId, message,id, time, receiverUserId, senderUserId));
+                request_list.add(new CollaborationRequestEntity(todoId,id, time, receiverUserId, senderUserId,message));
             }
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +74,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
                 senderUserId = rs.getInt(4);
                 todoId = rs.getInt(5);
                 message=rs.getString(6);
-                collaborationRequestEntity = new CollaborationRequestEntity(todoId,message, id, time, receiverUserId, senderUserId);
+                collaborationRequestEntity = new CollaborationRequestEntity(todoId,id, time, receiverUserId, senderUserId,message);
             }
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -180,7 +180,7 @@ public class CollaboratorRequestController implements BaseDAO<CollaborationReque
                 senderUserId = rs.getInt(4);
                 todoId = rs.getInt(5);
                 message=rs.getString(6);
-                requests.add(new CollaborationRequestEntity(todoId,message, id, time, receiverId, senderUserId));
+                requests.add(new CollaborationRequestEntity(todoId,id, time, receiverId, senderUserId,message));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
