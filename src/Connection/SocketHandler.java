@@ -171,7 +171,7 @@ public class SocketHandler extends Thread {
                     break;
                     
                 case "searchFriend":
-                    actionHandler = new SearchFriendHandler(userId);
+                    actionHandler = new SearchFriendHandler();
                     break;
                 case "addFriend":
                     actionHandler = new AddFriendHandler();

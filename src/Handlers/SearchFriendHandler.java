@@ -23,12 +23,6 @@ import org.json.JSONObject;
  */
 public class SearchFriendHandler implements ActionHandler {
 
-    private int userId;
-
-    public SearchFriendHandler(int userId) {
-        this.userId = userId;
-    }
-
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
 
@@ -43,41 +37,22 @@ public class SearchFriendHandler implements ActionHandler {
             // like id
             String friendUserName = friendEntity.getUserName();
             friendEntity = controller.findByUserName(friendUserName);
-            // Get the user friend's list to check if that user name is already
-            // exist in the friend list or not            
-            List<UserEntity> list = controller.findAllUserFriends(userId);
-            boolean isFriendExist = false;
-            for (int i = 0; i < list.size(); i++) {
-                if (friendUserName.equals(list.get(i).getUserName())) {
-                    isFriendExist = true;
-                    break;
-                }
-            }
-            
-            // Get the user entity to check if the user name is the same of 
-            // user name for searching
-            UserEntity userEntity = controller.findById(userId);
-            
+
             EntityWrapper entityWrapper;
+            
             if (friendEntity == null) {
                 // The user name is not exist
                 friendEntity = new UserEntity();
                 friendEntity.setId(-1);
                 entityWrapper = new EntityWrapper("searchFriend", "UserEntity", friendEntity);
-
-            } else if (isFriendExist) {
-                // The friend is already exist
-                friendEntity.setId(-2);
-                entityWrapper = new EntityWrapper("searchFriend", "UserEntity", friendEntity);
-            } else if (userEntity.getUserName().equals(friendUserName)) {
-                friendEntity.setId(-3);
-                entityWrapper = new EntityWrapper("searchFriend", "UserEntity", friendEntity);
+                String entityWrapperJson = gson.toJson(entityWrapper);
+                printStream.println(entityWrapperJson);
             } else {
+                // The user name is exist
                 entityWrapper = new EntityWrapper("searchFriend", "UserEntity", friendEntity);
+                String entityWrapperJson = gson.toJson(entityWrapper);
+                printStream.println(entityWrapperJson);
             }
-
-            String entityWrapperJson = gson.toJson(entityWrapper);
-            printStream.println(entityWrapperJson);
 
         } catch (JSONException ex) {
             System.out.println(ex);

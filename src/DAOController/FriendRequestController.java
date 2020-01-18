@@ -144,6 +144,23 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
             return false;
         }
     }
+        
+    public boolean delete(int getReceivedUserId, int senderUserId) {
+        int rows_affected = 0;
+        try {
+            PreparedStatement pst = connection.prepareStatement("DELETE FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
+            pst.setInt(1, getReceivedUserId);
+            pst.setInt(2, senderUserId);
+            rows_affected = pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (rows_affected > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /*EMAN KAMAL */
     public ArrayList<RequestEntity> findByReceiverId(int receiverId) {
@@ -166,21 +183,29 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         return requests;
     }
     
-    public boolean isRequestExist(int receivedUserId, int sentUserId) {
+    public int isRequestExist(int receivedUserId, int sentUserId) {
         
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
             pst.setInt(1, receivedUserId);
             pst.setInt(2, sentUserId);
             ResultSet rs = pst.executeQuery();
-            if (rs != null) {
-                return true;
+            if (rs.next()) {
+                return 1;
+            }
+            
+            pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
+            pst.setInt(1, sentUserId);
+            pst.setInt(2, receivedUserId);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return 0;
             }
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return false;
+        return -1;
     }
 
 }

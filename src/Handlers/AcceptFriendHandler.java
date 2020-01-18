@@ -38,9 +38,11 @@ public class AcceptFriendHandler implements ActionHandler {
             FriendRequestEntity requestEntity = gson.fromJson(requestEntityJson, FriendRequestEntity.class);                       
 
             // Delete the request from request friend table
-            frc.delete(requestEntity);
             int receivedUserId = requestEntity.getReceivedUserId();
             int sentUserId = requestEntity.getSentUserId();
+            
+            frc.delete(receivedUserId, sentUserId);
+            frc.delete(sentUserId, receivedUserId);
                         
             // Update database for adding a friend
             uc.insertFriend(sentUserId, receivedUserId);
