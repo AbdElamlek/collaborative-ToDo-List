@@ -24,6 +24,7 @@ import Handlers.ToDoDeleteHandler;
 import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
 import Handlers.TaskCreationHandler;
+import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
 import Handlers.LogoutHandler;
@@ -136,7 +137,7 @@ public class SocketHandler extends Thread {
                     //broadCast(jsonObjectStr);
                     actionHandler = new ToDoDeleteHandler();
                     break;
-                case "createNewTask":
+                case "create task":
                     actionHandler = new TaskCreationHandler();
                     break;
                 case "assigonToTaskRequest":
@@ -185,6 +186,11 @@ public class SocketHandler extends Thread {
                 case "logout":
                     actionHandler = new LogoutHandler();
                     break;
+                case "delete task":
+                    actionHandler = new TaskDeleteHandler();
+                    break;
+                   
+
             }
             actionHandler.handleAction(jsonObjectStr, output);
         } catch (JSONException ex) {
