@@ -28,8 +28,10 @@ import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
 import Handlers.SearchFriendHandler;
 import Handlers.TaskCreationHandler;
+import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
 import Handlers.withdrawFromTaskHandler;
+import Handlers.LogoutHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -87,11 +89,20 @@ public class SocketHandler extends Thread {
                 System.out.println("received json: "+recievedString);
 
                 /*eman kamal*/
-                handleResponse(recievedString);
+                if(recievedString != null){
+                    handleResponse(recievedString);
+                    isRuning = true;
+                }
+                else{
+                    socketHandlers.remove(this);
+                    isRuning = false;
 
+                }
                 /*eman kamal*/
-                isRuning = true;
+                
             } catch (IOException ex) {
+                socketHandlers.remove(this);
+                isRuning = false;
                 System.out.println(ex);
             }
         }
@@ -130,7 +141,7 @@ public class SocketHandler extends Thread {
                     //broadCast(jsonObjectStr);
                     actionHandler = new ToDoDeleteHandler();
                     break;
-                case "createNewTask":
+                case "create task":
                     actionHandler = new TaskCreationHandler();
                     break;
                 case "assigonToTaskRequest":
@@ -184,6 +195,12 @@ public class SocketHandler extends Thread {
                     break;
                 case "acceptFriend":
                     actionHandler = new AcceptFriendHandler();
+                    break;
+                case "logout":
+                    actionHandler = new LogoutHandler();
+                    break;
+                case "delete task":
+                    actionHandler = new TaskDeleteHandler();
                     break;
             }
             actionHandler.handleAction(jsonObjectStr, output);

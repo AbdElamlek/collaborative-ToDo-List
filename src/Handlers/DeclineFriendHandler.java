@@ -7,7 +7,7 @@ package Handlers;
 
 import ControllerBase.ActionHandler;
 import DAOController.FriendRequestController;
-import Entities.FriendRequestEntity;
+import Entities.RequestEntity;
 import com.google.gson.Gson;
 import java.io.PrintStream;
 import org.json.JSONException;
@@ -30,7 +30,7 @@ public class DeclineFriendHandler implements ActionHandler {
 
             // Get request entity string from json.
             String requestEntityJson = jsonObject.getJSONObject("entity").toString();
-            FriendRequestEntity requestEntity = gson.fromJson(requestEntityJson, FriendRequestEntity.class);
+            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);
 
             // delete request from friend request table.
             frc.delete(requestEntity);

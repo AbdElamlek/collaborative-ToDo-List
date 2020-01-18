@@ -10,7 +10,7 @@ import ControllerBase.ActionHandler;
 import DAOController.FriendRequestController;
 import DAOController.UserController;
 import Entities.EntityWrapper;
-import Entities.FriendRequestEntity;
+import Entities.RequestEntity;
 import Entities.UserEntity;
 import com.google.gson.Gson;
 import java.io.PrintStream;
@@ -36,7 +36,7 @@ public class DeleteFriendHandler implements ActionHandler {
 
             // Get request entity string from json.
             String requestEntityJson = jsonObject.getJSONObject("entity").toString();
-            FriendRequestEntity requestEntity = gson.fromJson(requestEntityJson, FriendRequestEntity.class);
+            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);
 
             // Update database 
             int receivedUserId = requestEntity.getReceivedUserId();

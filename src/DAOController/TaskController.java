@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,22 +73,39 @@ public class TaskController<TaskDAO> implements BaseDAO<TaskEntity> {
     @Override
     public boolean insert(TaskEntity entity) {
         int rows_affected = 0;
+         PreparedStatement  pst = null;
         try {
-            PreparedStatement pst = con.prepareStatement("insert into task (description,status,itemId) values (?,?,?)");
+            pst = con.prepareStatement("insert into task (description,status,itemId) values (?,?,?)",Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, entity.getDecription());
             pst.setInt(2, entity.getStatus());
             pst.setInt(3, entity.getItemId());
             rows_affected = pst.executeUpdate();
+            
+            
         } catch (SQLException ex) {
             Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (rows_affected > 0) {
-            return true;
-        } else {
-            return false;
-        }
-        //System.out.println("desc "+entity.getDecription());
         
+         if (rows_affected > 0) {
+            
+            try {
+                ResultSet rs2 = pst.getGeneratedKeys();
+                if(rs2.next()){
+                    int taskId = rs2.getInt(1);
+                    entity.setId(taskId);
+                    
+                    return true;
+                } else {
+                    return false;
+                }
+                //System.out.println("desc "+entity.getDecription());
+            } catch (SQLException ex) {
+                Logger.getLogger(TaskController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+    }
+       
+        return false;
     }
 
     @Override

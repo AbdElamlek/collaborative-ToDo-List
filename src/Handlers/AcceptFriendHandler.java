@@ -10,7 +10,7 @@ import ControllerBase.ActionHandler;
 import DAOController.FriendRequestController;
 import DAOController.UserController;
 import Entities.EntityWrapper;
-import Entities.FriendRequestEntity;
+import Entities.RequestEntity;
 import Entities.UserEntity;
 import com.google.gson.Gson;
 import java.io.PrintStream;
@@ -35,7 +35,7 @@ public class AcceptFriendHandler implements ActionHandler {
 
             // Get request entity string from json.
             String requestEntityJson = jsonObject.getJSONObject("entity").toString();
-            FriendRequestEntity requestEntity = gson.fromJson(requestEntityJson, FriendRequestEntity.class);                       
+            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);                       
 
             // Delete the request from request friend table
             int receivedUserId = requestEntity.getReceivedUserId();
@@ -62,8 +62,6 @@ public class AcceptFriendHandler implements ActionHandler {
             // If the friend is online send notification
             if (isOnline) {
                 // send a message to the reques's sender to add this friend
-                UserEntity receiverEntity = uc.findById(receivedUserId);
-                requestEntity.setFriendUserName(receiverEntity.getUserName());
                 EntityWrapper entityWrapper = new EntityWrapper("acceptFriend", "RequestEntity", requestEntity);
                 String entityWrapperJson = gson.toJson(entityWrapper);
                 friendSocket.printResponse(entityWrapperJson);

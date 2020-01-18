@@ -37,6 +37,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         Date time = null;
         int receiverUserId = 0;
         int senderUserId = 0;
+        String message;
         ArrayList<RequestEntity> request_list = new ArrayList<RequestEntity>();
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] ");
@@ -46,7 +47,8 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
                 time = rs.getDate(2);
                 receiverUserId = rs.getInt(3);
                 senderUserId = rs.getInt(4);
-                request_list.add(new RequestEntity(id, time,receiverUserId, senderUserId));
+                message = rs.getString("message");
+                request_list.add(new RequestEntity(id, time,receiverUserId, senderUserId, message));
             }
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,6 +61,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         Date time = null;
         int receiverUserId = 0;
         int senderUserId = 0;
+        String message;
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE id = ?");
             pst.setInt(1, id);
@@ -68,7 +71,8 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
                 time = rs.getDate(2);
                 receiverUserId = rs.getInt(3);
                 senderUserId = rs.getInt(4);
-                requestEntity = new RequestEntity(id, time,receiverUserId, senderUserId);
+                message = rs.getString("message");
+                requestEntity = new RequestEntity(id, time,receiverUserId, senderUserId, message);
             }
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,10 +85,11 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         int rows_affected = 0;
         PreparedStatement pst=null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId, message) VALUES (?,?,?,?)");
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
+            pst.setString(4, entity.getMessage());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,11 +117,12 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[friend_request] SET time = ?, receiverUserId = ?,senderUserId=? WHERE id = ?");
+                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[friend_request] SET time = ?, receiverUserId = ?,senderUserId=?, message=? WHERE id = ?");
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
-            pst.setInt(4, entity.getId());
+            pst.setString(4, entity.getMessage());
+            pst.setInt(5, entity.getId());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -175,7 +181,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                requests.add(new RequestEntity(resultSet.getInt("id"), resultSet.getDate("time"),resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId")));
+                requests.add(new RequestEntity(resultSet.getInt("id"), resultSet.getDate("time"),resultSet.getInt("receiverUserId"), resultSet.getInt("senderUserId"), resultSet.getString("message")));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

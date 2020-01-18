@@ -10,7 +10,7 @@ import ControllerBase.ActionHandler;
 import DAOController.FriendRequestController;
 import DAOController.UserController;
 import Entities.EntityWrapper;
-import Entities.FriendRequestEntity;
+import Entities.RequestEntity;
 import Entities.UserEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +36,7 @@ public class AddFriendHandler implements ActionHandler {
 
             // Get request entity string from json.
             String requestEntityJson = jsonObject.getJSONObject("entity").toString();
-            FriendRequestEntity requestEntity = gson.fromJson(requestEntityJson, FriendRequestEntity.class);
+            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);
 
             // Insert request into friend request table. The result may be true
             // or false if it true then the request is inserted, else the request
@@ -47,8 +47,6 @@ public class AddFriendHandler implements ActionHandler {
             // The friend request is not exist
             switch (result) {
                 case -1:
-                    UserEntity friendEntity = uc.findById(sentUserId);
-                    requestEntity.setFriendUserName(friendEntity.getUserName());
                     frc.insert(requestEntity);
                     // Check if the receiving user is online
                     boolean isOnline = false;
@@ -62,7 +60,6 @@ public class AddFriendHandler implements ActionHandler {
                     }   // If the friend is online send notification
                     if (isOnline) {
                         // send a notification to the online user
-                        requestEntity.setFriendUserName(friendEntity.getUserName());
                         EntityWrapper entityWrapper = new EntityWrapper("addFriend", "FriendRequestEntity", requestEntity);
                         String entityWrapperJson = gson.toJson(entityWrapper);
                         friendSocket.printResponse(entityWrapperJson);
