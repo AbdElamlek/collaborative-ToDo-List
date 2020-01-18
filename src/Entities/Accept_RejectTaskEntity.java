@@ -19,8 +19,8 @@ public class Accept_RejectTaskEntity extends RequestEntity{
         
     }
 
-    public Accept_RejectTaskEntity(int id, Date time, int receivedUserId, int sentUserId, int taskId) {
-        super(id, time, receivedUserId, sentUserId);
+    public Accept_RejectTaskEntity(int id, Date time, int receivedUserId, int sentUserId, int taskId, String message) {
+        super(id, time, receivedUserId, sentUserId, message);
         this.taskId = taskId;
     }
     

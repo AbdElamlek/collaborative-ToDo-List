@@ -14,8 +14,8 @@ import java.sql.Date;
 public class CollaborationRequestEntity extends RequestEntity{
     private int todoId;
 
-    public CollaborationRequestEntity(int todoId, int id, Date time,int receivedUserId, int sentUserId) {
-        super(id, time,receivedUserId, sentUserId);
+    public CollaborationRequestEntity(int todoId, int id, Date time,int receivedUserId, int sentUserId, String message) {
+        super(id, time,receivedUserId, sentUserId, message);
         this.todoId = todoId;
     }
     

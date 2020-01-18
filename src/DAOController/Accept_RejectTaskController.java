@@ -35,6 +35,7 @@ public class Accept_RejectTaskController implements BaseDAO<Accept_RejectTaskEnt
         int receiverUserId = 0;
         int senderUserId = 0;
         int taskId;
+        String message;
         ArrayList<Accept_RejectTaskEntity> request_list = new ArrayList<Accept_RejectTaskEntity>();
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[task_assignment_request] ");
@@ -45,7 +46,8 @@ public class Accept_RejectTaskController implements BaseDAO<Accept_RejectTaskEnt
                 receiverUserId = rs.getInt(3);
                 senderUserId = rs.getInt(4);
                 taskId = rs.getInt(5);
-                request_list.add(new Accept_RejectTaskEntity(id, time,receiverUserId, senderUserId, taskId));
+                message = rs.getString("message");
+                request_list.add(new Accept_RejectTaskEntity(id, time,receiverUserId, senderUserId, taskId, message));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -60,6 +62,7 @@ public class Accept_RejectTaskController implements BaseDAO<Accept_RejectTaskEnt
         int receiverUserId = 0;
         int senderUserId = 0;
         int taskId;
+        String message;
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[task_assignment_request] WHERE id = ?");
             pst.setInt(1, id);
@@ -70,7 +73,8 @@ public class Accept_RejectTaskController implements BaseDAO<Accept_RejectTaskEnt
                 receiverUserId = rs.getInt(3);
                 senderUserId = rs.getInt(4);
                 taskId = rs.getInt(5);
-                accept_RecjectTaskEntity = new Accept_RejectTaskEntity(id, time,receiverUserId, senderUserId,taskId);
+                message = rs.getString("message");
+                accept_RecjectTaskEntity = new Accept_RejectTaskEntity(id, time,receiverUserId, senderUserId,taskId, message);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -83,11 +87,12 @@ public class Accept_RejectTaskController implements BaseDAO<Accept_RejectTaskEnt
        int rows_affected = 0;
         PreparedStatement pst=null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[task_assignment_request] (time,receiverUserId,senderUserId,taskId) VALUES (?,?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[task_assignment_request] (time,receiverUserId,senderUserId,taskId,message) VALUES (?,?,?,?,?)");
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
             pst.setInt(4, entity.getTaskId());
+            pst.setString(5, entity.getMessage());
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -115,12 +120,15 @@ public class Accept_RejectTaskController implements BaseDAO<Accept_RejectTaskEnt
         int rows_affected = 0;
         try {
             PreparedStatement pst
-                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[task_assignment_request] SET time = ?, receiverUserId = ?,senderUserId=?, taskId=? WHERE id = ?");
+                    = connection.prepareStatement("UPDATE [todoDB].[dbo].[task_assignment_request] SET time = ?, receiverUserId = ?,senderUserId=?, taskId=?, message=? WHERE id = ?");
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
             pst.setInt(4, entity.getTaskId());
-            pst.setInt(5, entity.getId());
+            pst.setString(5, entity.getMessage());
+            pst.setInt(6, entity.getId());
+            
+
             rows_affected = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
