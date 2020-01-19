@@ -26,7 +26,7 @@ import Handlers.RejectTaskHandler;
 import Handlers.TaskCreationHandler;
 import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
-import Handlers.withdrawFromTaskHandler;
+import Handlers.WithdrawFromTaskHandler;
 import Handlers.LogoutHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -169,7 +169,7 @@ public class SocketHandler extends Thread {
                         actionHandler = new RejectTaskHandler();
                         break;
                     case "withdrawFromTask":
-                        actionHandler = new withdrawFromTaskHandler();
+                        actionHandler = new WithdrawFromTaskHandler();
                         break;
                     case "add collaborator request":
                         actionHandler = new AddCollaboratorRequestHandler();
@@ -201,6 +201,9 @@ public class SocketHandler extends Thread {
                         break;
                     case "delete task":
                         actionHandler = new TaskDeleteHandler();
+                        break;
+                    case "withdraw from task":
+                        actionHandler = new WithdrawFromTaskHandler();
                         break;
 
 

@@ -268,4 +268,28 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         }
         return collaborators;
     }
+    
+    public ArrayList<UserEntity> findUsersAssignedToTask(int taskId){
+        ArrayList<UserEntity> users = new ArrayList<UserEntity>();
+        try{
+           String query = "SELECT id, username FROM [todoDB].[dbo].[user], [todoDB].[dbo].[user_assigned_task] WHERE userId = id AND taskId = ?";
+           PreparedStatement preparedStatement = con.prepareStatement(query);
+           preparedStatement.setInt(1, taskId);
+           
+           
+           ResultSet resultSet = preparedStatement.executeQuery();
+           UserEntity owner = new UserEntity();
+           if(resultSet.next())
+                owner.setId(resultSet.getInt("id"));
+           
+           while (resultSet.next()) {
+                users.add(new UserEntity(resultSet.getInt("id"), resultSet.getString("username")));
+            }
+        
+           
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return users;
+    }
 }
