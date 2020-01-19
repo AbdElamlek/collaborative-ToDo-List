@@ -60,7 +60,7 @@ public class AddFriendHandler implements ActionHandler {
                     }   // If the friend is online send notification
                     if (isOnline) {
                         // send a notification to the online user
-                        EntityWrapper entityWrapper = new EntityWrapper("addFriend", "FriendRequestEntity", requestEntity);
+                        EntityWrapper entityWrapper = new EntityWrapper("addFriend", "RequestEntity", requestEntity);
                         String entityWrapperJson = gson.toJson(entityWrapper);
                         friendSocket.printResponse(entityWrapperJson);
                     }   break;
@@ -70,7 +70,7 @@ public class AddFriendHandler implements ActionHandler {
                         System.out.println("is alerady inserted");
                         requestEntity.setId(-1);
                         EntityWrapper entityWrapper
-                                = new EntityWrapper("addFriend", "FriendRequestEntity", requestEntity);
+                                = new EntityWrapper("addFriend", "RequestEntity", requestEntity);
                         String entityWrapperJson = gson.toJson(entityWrapper);
                         printStream.println(entityWrapperJson);
                         break;
@@ -81,7 +81,7 @@ public class AddFriendHandler implements ActionHandler {
                         System.out.println("you already have a friend request");
                         requestEntity.setId(-2);
                         EntityWrapper entityWrapper
-                                = new EntityWrapper("addFriend", "FriendRequestEntity", requestEntity);
+                                = new EntityWrapper("addFriend", "RequestEntity", requestEntity);
                         String entityWrapperJson = gson.toJson(entityWrapper);
                         printStream.println(entityWrapperJson);
                         break;

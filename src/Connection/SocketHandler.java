@@ -13,7 +13,6 @@ import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
 import Handlers.DeclineFriendHandler;
-import Handlers.DeleteFriendHandler;
 import Handlers.ItemCreationHandler;
 import Handlers.ItemDeleteHandler;
 import Handlers.ItemUpdateHandler;
@@ -186,9 +185,6 @@ public class SocketHandler extends Thread {
                     break;
                 case "addFriend":
                     actionHandler = new AddFriendHandler();
-                    break;
-                case "deleteFriend":
-                    actionHandler = new DeleteFriendHandler();
                     break;
                 case "declineFriend":
                     actionHandler = new DeclineFriendHandler();

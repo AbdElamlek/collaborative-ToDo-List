@@ -85,7 +85,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         int rows_affected = 0;
         PreparedStatement pst=null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId, message) VALUES (?,?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId, message) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());

@@ -29,24 +29,24 @@ public class AcceptFriendHandler implements ActionHandler {
         FriendRequestController frc = new FriendRequestController();
         UserController uc = new UserController();
         try {
-
             // Create json object
             JSONObject jsonObject = new JSONObject(requestJsonObject);
 
+            // Send accept action to the friend that i accept your request
             // Get request entity string from json.
             String requestEntityJson = jsonObject.getJSONObject("entity").toString();
-            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);                       
+            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);
 
             // Delete the request from request friend table
             int receivedUserId = requestEntity.getReceivedUserId();
             int sentUserId = requestEntity.getSentUserId();
-            
-            frc.delete(receivedUserId, sentUserId);
             frc.delete(sentUserId, receivedUserId);
-                        
+            
+            UserEntity userEntity = uc.findById(sentUserId);
+            UserEntity friendEntity = uc.findById(receivedUserId);
+
             // Update database for adding a friend
             uc.insertFriend(sentUserId, receivedUserId);
-            uc.insertFriend(receivedUserId, sentUserId);
 
             // Check if the receiving user is online
             boolean isOnline = false;
@@ -55,17 +55,27 @@ public class AcceptFriendHandler implements ActionHandler {
                 if (receivedUserId == SocketHandler.getOnlineIds().get(i)) {
                     isOnline = true;
                     friendSocket = SocketHandler.socketHandlers.get(i);
+                    friendEntity.setUserStatus(1);
                     break;
                 }
             }
 
             // If the friend is online send notification
+            EntityWrapper entityWrapper;
+            String entityWrapperJson;
             if (isOnline) {
                 // send a message to the reques's sender to add this friend
-                EntityWrapper entityWrapper = new EntityWrapper("acceptFriend", "RequestEntity", requestEntity);
-                String entityWrapperJson = gson.toJson(entityWrapper);
+                userEntity.setUserStatus(1);
+                entityWrapper = new EntityWrapper("acceptFriend", "UserEntity", userEntity);
+                entityWrapperJson = gson.toJson(entityWrapper);
                 friendSocket.printResponse(entityWrapperJson);
             }
+
+            // Send accept action to that user after update database successfully
+            requestEntity.setMessage(userEntity.getUserName());
+            entityWrapper = new EntityWrapper("acceptFriend", "RequestEntity", friendEntity);
+            entityWrapperJson = gson.toJson(entityWrapper);
+            printStream.println(entityWrapperJson);
 
         } catch (JSONException ex) {
             System.out.println(ex);
