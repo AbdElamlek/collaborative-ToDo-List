@@ -102,9 +102,9 @@ public class LoginHandler implements ActionHandler{
 
                 retrievedUser.setFriendList(userController.findAllUserFriends(retrievedUser.getId()));
                
-                String friendOnlineJsonObject = gson.toJson(new EntityWrapper("online friend", "UserEntity", new UserEntity(retrievedUser.getId(), retrievedUser.getUserName())));    
+                String friendOnlineJsonObject = gson.toJson(new EntityWrapper("online friend", "UserEntity", new UserEntity(retrievedUser.getId(), retrievedUser.getUserName(), 1)));    
                 SocketHandler socketHandler;
-                
+                System.err.println(friendOnlineJsonObject);
                 for(UserEntity friend : retrievedUser.getFriendList()){
                     if(SocketHandler.getOnlineIds().contains(friend.getId())){
                         friend.setUserStatus(1);

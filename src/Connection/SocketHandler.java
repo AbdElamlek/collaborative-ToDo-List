@@ -81,11 +81,15 @@ public class SocketHandler extends Thread {
 
                 String recievedString = input.readLine();
 
+                isRuning = true;
 
                 System.out.println("received json: "+recievedString);
 
                 /*eman kamal*/
-                if(recievedString != null){
+                
+                handleResponse(recievedString);
+                
+                /*if(recievedString != null){
                     handleResponse(recievedString);
                     isRuning = true;
                 }
@@ -93,12 +97,13 @@ public class SocketHandler extends Thread {
                     socketHandlers.remove(this);
                     isRuning = false;
 
-                }
+                }*/
                 /*eman kamal*/
                 
             } catch (IOException ex) {
-                socketHandlers.remove(this);
-                isRuning = false;
+                //System.out.println("in catch");
+                //socketHandlers.remove(this);
+                //isRuning = false;
                 System.out.println(ex);
             }
         }
@@ -112,87 +117,96 @@ public class SocketHandler extends Thread {
 
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
             String action = jsonObject.getString("action");
-
-            switch (action) {
-                case "signup":
-                    actionHandler = new SignUpHandler();
-                    break;
-                case "logIn":
-                    actionHandler = new LoginHandler();
-                    ((LoginHandler)actionHandler).assignUserIdToSocket(this::setUserId);
-                    break;
-                case "notification":
-                    broadCast(jsonObjectStr);
-                    actionHandler = new NotificationHandler();
-                    break;
-                case "create todo list":
-                    actionHandler = new ToDoCreationHandler();
-                    break;
-                case "update todo list":
-                    //broadCast(jsonObjectStr);
-                    System.out.println("to handler");
-                    actionHandler = new ToDoUpdateHandler();
-                    break;
-                case "delete todo list":
-                    //broadCast(jsonObjectStr);
-                    actionHandler = new ToDoDeleteHandler();
-                    break;
-                case "create task":
-                    actionHandler = new TaskCreationHandler();
-                    break;
-                case "assigonToTaskRequest":
-                    actionHandler = new AssignTaskHandler();
-                    break;
-                case "changeTaskStatus":
-                    actionHandler = new UpdateTaskStatusHandler();
-                    break;
-                case "acceptTask":
-                    actionHandler = new AcceptTaskHandler();
-                    break;
-                case "rejectTaskRequest":
-                    actionHandler = new RejectTaskHandler();
-                    break;
-                case "withdrawFromTask":
-                    actionHandler = new withdrawFromTaskHandler();
-                    break;
-                case "add collaborator request":
-                    actionHandler = new AddCollaboratorRequestHandler();
-                    break;
-                case "accept collaborator request":
-                    actionHandler = new AcceptCollaboratorRequestHandler();
-                    break;
-                case "reject collaborator request":
-                    actionHandler = new RejectCollaboratorRequestHandler();
-                    break;
-
-                case "create item":
-                    actionHandler = new ItemCreationHandler();
-                    break;
-                case "update item":
-                    //broadCast(jsonObjectStr);
-                    actionHandler = new ItemUpdateHandler();
-                    break;
-                case "delete item":
-                    //broadCast(jsonObjectStr);
-                    actionHandler = new ItemDeleteHandler();
-                    break;
-                    
-                case "searchFriend":
-                    actionHandler = new FriendHandler();
-                    break;
-                case "addFriend":
-                    actionHandler = new AddFriendHandler();
-                    break;
-                case "logout":
-                    actionHandler = new LogoutHandler();
-                    break;
-                case "delete task":
-                    actionHandler = new TaskDeleteHandler();
-                    break;
-                   
-
+            
+            if(action.equals("logout")){
+                isRuning = false;
+                
+                actionHandler = new LogoutHandler();
+                actionHandler.handleAction(jsonObjectStr, output);
+                
+                closeSocket();
+                socketHandlers.remove(this);
             }
-            actionHandler.handleAction(jsonObjectStr, output);
+            else{
+
+                switch (action) {
+                    case "signup":
+                        actionHandler = new SignUpHandler();
+                        break;
+                    case "logIn":
+                        actionHandler = new LoginHandler();
+                        ((LoginHandler)actionHandler).assignUserIdToSocket(this::setUserId);
+                        break;
+                    case "notification":
+                        broadCast(jsonObjectStr);
+                        actionHandler = new NotificationHandler();
+                        break;
+                    case "create todo list":
+                        actionHandler = new ToDoCreationHandler();
+                        break;
+                    case "update todo list":
+                        //broadCast(jsonObjectStr);
+                        System.out.println("to handler");
+                        actionHandler = new ToDoUpdateHandler();
+                        break;
+                    case "delete todo list":
+                        //broadCast(jsonObjectStr);
+                        actionHandler = new ToDoDeleteHandler();
+                        break;
+                    case "create task":
+                        actionHandler = new TaskCreationHandler();
+                        break;
+                    case "assigonToTaskRequest":
+                        actionHandler = new AssignTaskHandler();
+                        break;
+                    case "changeTaskStatus":
+                        actionHandler = new UpdateTaskStatusHandler();
+                        break;
+                    case "acceptTask":
+                        actionHandler = new AcceptTaskHandler();
+                        break;
+                    case "rejectTaskRequest":
+                        actionHandler = new RejectTaskHandler();
+                        break;
+                    case "withdrawFromTask":
+                        actionHandler = new withdrawFromTaskHandler();
+                        break;
+                    case "add collaborator request":
+                        actionHandler = new AddCollaboratorRequestHandler();
+                        break;
+                    case "accept collaborator request":
+                        actionHandler = new AcceptCollaboratorRequestHandler();
+                        break;
+                    case "reject collaborator request":
+                        actionHandler = new RejectCollaboratorRequestHandler();
+                        break;
+
+                    case "create item":
+                        actionHandler = new ItemCreationHandler();
+                        break;
+                    case "update item":
+                        //broadCast(jsonObjectStr);
+                        actionHandler = new ItemUpdateHandler();
+                        break;
+                    case "delete item":
+                        //broadCast(jsonObjectStr);
+                        actionHandler = new ItemDeleteHandler();
+                        break;
+
+                    case "searchFriend":
+                        actionHandler = new FriendHandler();
+                        break;
+                    case "addFriend":
+                        actionHandler = new AddFriendHandler();
+                        break;
+                    case "delete task":
+                        actionHandler = new TaskDeleteHandler();
+                        break;
+
+
+                }
+                actionHandler.handleAction(jsonObjectStr, output);
+            }
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
