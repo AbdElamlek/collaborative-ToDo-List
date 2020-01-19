@@ -11,6 +11,7 @@ import Handlers.AcceptTaskHandler;
 import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
+import Handlers.CommentCreationHandler;
 import Handlers.ItemCreationHandler;
 import Handlers.ItemDeleteHandler;
 import Handlers.ItemUpdateHandler;
@@ -102,6 +103,7 @@ public class SocketHandler extends Thread {
 
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
             String action = jsonObject.getString("action");
+            if(jsonObject!=null){
 
             switch (action) {
                 case "signup":
@@ -176,9 +178,12 @@ public class SocketHandler extends Thread {
                 case "delete task":
                     actionHandler = new TaskDeleteHandler();
                     break;
-                   
+                case "add comment":
+                    actionHandler = new CommentCreationHandler();
+                    break;   
             }
             actionHandler.handleAction(jsonObjectStr, output);
+            }
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
