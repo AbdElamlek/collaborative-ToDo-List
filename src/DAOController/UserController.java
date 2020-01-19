@@ -248,6 +248,44 @@ public class UserController<UserDAO> implements BaseDAO<UserEntity> {
         return false;
     }
     
+    /* ahmedpro */
+    
+    public boolean deleteFriend(int userId, int friendId) {
+        try {
+            String query = "DELETE FROM [todoDB].[dbo].[user_friend] where userId = ? and friendId = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, friendId);
+            
+            if(preparedStatement.executeUpdate() > 0)
+                return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    public UserEntity findByUserName(String userName) {
+        try {
+            String query = "SELECT * FROM [todoDB].[dbo].[user] WHERE username = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setString(1, userName);
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                userEntity = new UserEntity();
+                userEntity.setId(resultSet.getInt(1));
+                userEntity.setFirstName(resultSet.getString(2));
+                userEntity.setLastName(resultSet.getString(3));
+                userEntity.setUserName(resultSet.getString(4));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        
+        return userEntity;
+    }
+    
     public ArrayList<UserEntity> findAllListRequestedCollaborators(int todoId){
         ArrayList<UserEntity> collaborators = new ArrayList<UserEntity>();
         try {

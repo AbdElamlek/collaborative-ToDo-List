@@ -7,10 +7,13 @@ package Connection;
 
 import ControllerBase.ActionHandler;
 import Handlers.AcceptCollaboratorRequestHandler;
+import Handlers.AcceptFriendHandler;
 import Handlers.AcceptTaskHandler;
 import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
+import Handlers.DeclineFriendHandler;
+import Handlers.CommentCreationHandler;
 import Handlers.ItemCreationHandler;
 import Handlers.ItemDeleteHandler;
 import Handlers.ItemUpdateHandler;
@@ -23,6 +26,7 @@ import Handlers.ToDoCreationHandler;
 import Handlers.ToDoDeleteHandler;
 import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
+import Handlers.SearchFriendHandler;
 import Handlers.TaskCreationHandler;
 import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
@@ -117,7 +121,7 @@ public class SocketHandler extends Thread {
 
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
             String action = jsonObject.getString("action");
-            
+
             if(action.equals("logout")){
                 isRuning = false;
                 
@@ -205,6 +209,10 @@ public class SocketHandler extends Thread {
                     case "withdraw from task":
                         actionHandler = new WithdrawFromTaskHandler();
                         break;
+                    case "add comment":
+                        actionHandler = new CommentCreationHandler();
+                        break;      
+
 
 
                 }

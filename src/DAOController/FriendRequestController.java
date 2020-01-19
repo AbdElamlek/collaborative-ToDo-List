@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +85,7 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         int rows_affected = 0;
         PreparedStatement pst=null;
         try {
-            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId, message) VALUES (?,?,?,?)");
+            pst = connection.prepareStatement("INSERT INTO [todoDB].[dbo].[friend_request] (time,receiverUserId,senderUserId, message) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
             pst.setDate(1, entity.getTime());
             pst.setInt(2, entity.getReceivedUserId());
             pst.setInt(3, entity.getSentUserId());
@@ -149,6 +150,23 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
             return false;
         }
     }
+        
+    public boolean delete(int getReceivedUserId, int senderUserId) {
+        int rows_affected = 0;
+        try {
+            PreparedStatement pst = connection.prepareStatement("DELETE FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
+            pst.setInt(1, getReceivedUserId);
+            pst.setInt(2, senderUserId);
+            rows_affected = pst.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (rows_affected > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /*EMAN KAMAL */
     public ArrayList<RequestEntity> findByReceiverId(int receiverId) {
@@ -171,28 +189,29 @@ public class FriendRequestController<RequestDAO> implements BaseDAO<RequestEntit
         return requests;
     }
     
-    
-    /* ahmedpro */
-    public UserEntity findByUserName(String userName) {
-        UserEntity userEntity = null;
+    public int isRequestExist(int receivedUserId, int sentUserId) {
+        
         try {
-            String query = "SELECT * FROM [todoDB].[dbo].[user] WHERE username = ?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, userName);
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
+            pst.setInt(1, receivedUserId);
+            pst.setInt(2, sentUserId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return 1;
+            }
             
-            ResultSet resultSet = preparedStatement.executeQuery();
-            userEntity = new UserEntity();
-            while (resultSet.next()) {
-                userEntity.setId(resultSet.getInt(1));
-                userEntity.setFirstName(resultSet.getString(2));
-                userEntity.setLastName(resultSet.getString(3));
-                userEntity.setUserName(resultSet.getString(4));
+            pst = connection.prepareStatement("SELECT * FROM [todoDB].[dbo].[friend_request] WHERE receiverUserId = ? and senderUserId = ?");
+            pst.setInt(1, sentUserId);
+            pst.setInt(2, receivedUserId);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return 0;
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            Logger.getLogger(FriendRequestController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return userEntity;
+        return -1;
     }
 
 }

@@ -27,7 +27,7 @@ public class FriendHandler implements ActionHandler {
     public void handleAction(String requestJsonObject, PrintStream printStream) {
         
         Gson gson = new Gson();
-        FriendRequestController controller = new FriendRequestController();
+        UserController controller = new UserController();
         try {
             JSONObject jsonObject = new JSONObject(requestJsonObject);
             String friendJson = jsonObject.getJSONObject("entity").toString();
