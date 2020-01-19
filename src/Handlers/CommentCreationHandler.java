@@ -8,6 +8,7 @@ package Handlers;
 import Connection.SocketHandler;
 import ControllerBase.ActionHandler;
 import DAOController.CommentController;
+import DAOController.ToDoController;
 import DAOController.UserController;
 import Entities.CommentEntity;
 import Entities.EntityWrapper;
@@ -27,6 +28,7 @@ public class CommentCreationHandler implements ActionHandler{
     private Gson gson;
     private UserController userController;
     private CommentController commentController;
+    private ToDoController toDoController;
     
      @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
@@ -34,6 +36,7 @@ public class CommentCreationHandler implements ActionHandler{
                 gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
                 userController = new UserController();
                 commentController = new CommentController();
+                toDoController = new ToDoController();
                 JSONObject jsonObject = new JSONObject(requestJsonObject);
                 String requestCommentJsonObject  = jsonObject.getJSONObject("entity").toString();
                 System.out.println("******json: "+requestCommentJsonObject);
@@ -47,13 +50,15 @@ public class CommentCreationHandler implements ActionHandler{
                      String taskCreationJsonResponse = gson.toJson(entityWrapper);
                      List<UserEntity> collaborators = userController.findAllListCollaborators(commentEntity.getTodoId());
                      List<Integer> onLineUsers = SocketHandler.getOnlineIds();
+                     int todoOwnerId = toDoController.findById(commentEntity.getTodoId()).getOwnerId();
                      if(collaborators.size() > 0){
                             for(UserEntity userEntity : collaborators){
                            if(onLineUsers.contains(userEntity.getId()) ||onLineUsers.contains(commentEntity.getCommentOwnerId())){
 
                                for(int i =0; i< SocketHandler.socketHandlers.size();i++){
                                    if(SocketHandler.socketHandlers.get(i).getUserId()== userEntity.getId()
-                                   || SocketHandler.socketHandlers.get(i).getUserId() == commentEntity.getCommentOwnerId()){
+                                   || SocketHandler.socketHandlers.get(i).getUserId() == commentEntity.getCommentOwnerId()
+                                   || SocketHandler.socketHandlers.get(i).getUserId() == todoOwnerId){
                                        SocketHandler.socketHandlers.get(i).printResponse(taskCreationJsonResponse);
 
                                    }
