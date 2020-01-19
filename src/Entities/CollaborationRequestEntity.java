@@ -17,8 +17,7 @@ public class CollaborationRequestEntity extends RequestEntity{
     public CollaborationRequestEntity(int todoId, int id, Date time,int receivedUserId, int sentUserId, String message) {
         super(id, time,receivedUserId, sentUserId, message);
         this.todoId = todoId;
-    }
-    
+    }   
 
     public int getTodoId() {
         return todoId;

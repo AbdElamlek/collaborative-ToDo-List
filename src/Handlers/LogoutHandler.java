@@ -37,6 +37,7 @@ public class LogoutHandler implements ActionHandler{
             String userJsonObject  = jsonObject.getJSONObject("entity").toString();
             
             UserEntity user = gson.fromJson(userJsonObject, UserEntity.class);
+            user.setUserStatus(0);
             ArrayList<UserEntity> friends = userController.findAllUserFriends(user.getId());
             
             String friendOnlineJsonObject = gson.toJson(new EntityWrapper("offline friend", "UserEntity", user));    
