@@ -46,6 +46,7 @@ public class AddCollaboratorRequestHandler implements ActionHandler {
                 
                 NotificationEntity ne = new NotificationEntity();
                 UserEntity ue = uc.findById(cre.getSentUserId());
+                cre.setMessage(ue.getUserName()+ "Collaborator Request");
                 ne.setMsg(ue.getUserName() + " sent add collaborator request");
                 ne.setReceivedUserId(cre.getReceivedUserId());
                 ne.setSentUserId(cre.getSentUserId());
