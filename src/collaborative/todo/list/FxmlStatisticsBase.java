@@ -23,7 +23,8 @@ public class FxmlStatisticsBase extends AnchorPane {
     protected final AnchorPane statisticsPane;
     protected final Label statisticsTitle;
     protected final VBox statisticsBox;
-    private String[] arr;
+    private int size1 = 0;
+    private int size2 = 0;
     
     private ServerSocketHandler server;
 
@@ -82,6 +83,7 @@ public class FxmlStatisticsBase extends AnchorPane {
         refresh.setText("refresh");
         refresh.addEventHandler(ActionEvent.ACTION, (action) -> {
             setonlineUsersBox(SocketHandler.getOnlineUsersName());
+            setStatisticsBox();
         });
 
         onlineUsersPane.setPrefHeight(324.0);
@@ -120,7 +122,7 @@ public class FxmlStatisticsBase extends AnchorPane {
         statisticsPane.getChildren().add(statisticsBox);
         getChildren().add(statisticsPane);
         
-        statisticsBox();
+        setStatisticsBox();
 
     }
     
@@ -130,11 +132,11 @@ public class FxmlStatisticsBase extends AnchorPane {
     }
     
     public void setonlineUsersBox(String[] list) {
-        if (arr != null) {
-            onlineUsersBox.getChildren().remove(0, arr.length);
+        if (size1 != 0) {
+            onlineUsersBox.getChildren().remove(0, size1);
         }
         onlineUsersTitle.setText("online users: " + list.length);
-        arr = list;
+        size1 = list.length;
         for (String list1 : list) {
             OnlineUserItemBase o = new OnlineUserItemBase();
             o.setUserName(list1);
@@ -142,9 +144,13 @@ public class FxmlStatisticsBase extends AnchorPane {
         }
     }
     
-    public void statisticsBox() {
+    public void setStatisticsBox() {
+        if (size2 != 0) {
+            onlineUsersBox.getChildren().remove(0, size2);
+        }
         ToDoController tdc = new ToDoController();
         ArrayList<ToDoEntity> list = tdc.findAll();
+        size2 = list.size();
         statisticsTitle.setText("todo lists: " + list.size());
         for (int i = 0; i < list.size(); i++) {
             TodoStatisticsItemBase item = new TodoStatisticsItemBase();
