@@ -31,7 +31,7 @@ import Handlers.SearchFriendHandler;
 import Handlers.TaskCreationHandler;
 import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
-import Handlers.withdrawFromTaskHandler;
+import Handlers.WithdrawFromTaskHandler;
 import Handlers.LogoutHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -105,9 +105,10 @@ public class SocketHandler extends Thread {
  /*eman kamal*/
             } catch (IOException ex) {
                 //System.out.println("in catch");
-                //socketHandlers.remove(this);
+                socketHandlers.remove(this);
+                closeSocket();
                 //isRuning = false;
-                System.out.println(ex);
+                //System.out.println(ex);
             }
         }
     }
@@ -171,7 +172,7 @@ public class SocketHandler extends Thread {
                         actionHandler = new RejectTaskHandler();
                         break;
                     case "withdrawFromTask":
-                        actionHandler = new withdrawFromTaskHandler();
+                        actionHandler = new WithdrawFromTaskHandler();
                         break;
                     case "add collaborator request":
                         actionHandler = new AddCollaboratorRequestHandler();
@@ -209,9 +210,13 @@ public class SocketHandler extends Thread {
                     case "delete task":
                         actionHandler = new TaskDeleteHandler();
                         break;
+                    case "withdraw from task":
+                        actionHandler = new WithdrawFromTaskHandler();
+                        break;
                     case "add comment":
                         actionHandler = new CommentCreationHandler();
                         break;
+
 
                 }
                 actionHandler.handleAction(jsonObjectStr, output);
