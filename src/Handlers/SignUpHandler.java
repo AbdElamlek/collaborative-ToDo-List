@@ -12,6 +12,7 @@ import Entities.EntityWrapper;
 import Entities.UserEntity;
 import com.google.gson.Gson;
 import java.io.PrintStream;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -22,6 +23,12 @@ import org.json.JSONObject;
  * @author Abd-Elmalek
  */
 public class SignUpHandler implements ActionHandler{
+    
+     private Consumer<Integer> userIdSetter;
+    
+    public void assignUserIdToSocket(Consumer<Integer> userIdSetter){
+        this.userIdSetter = userIdSetter;
+    }
 
     @Override
     public void handleAction(String responseJsonObject , PrintStream printStream) {
@@ -34,6 +41,8 @@ public class SignUpHandler implements ActionHandler{
             AdapterController adapterController=new AdapterController();
             if (userController.insert(userEntity)) {
                 //registerd!
+                if(userIdSetter != null)
+                    userIdSetter.accept(userEntity.getId());
                 System.out.println("server : "+userEntity.getId());
                 String userJson=adapterController.entity2Json(new EntityWrapper("signup","UserEntity",userEntity));
                 System.out.println("server sent userjson: "+userJson);

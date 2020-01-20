@@ -137,6 +137,7 @@ public class SocketHandler extends Thread {
                 switch (action) {
                     case "signup":
                         actionHandler = new SignUpHandler();
+                        ((SignUpHandler)actionHandler).assignUserIdToSocket(this::setUserId);
                         break;
                     case "logIn":
                         actionHandler = new LoginHandler();
