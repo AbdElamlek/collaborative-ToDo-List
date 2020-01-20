@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -17,6 +18,8 @@ public class FxmlStatisticsBase extends AnchorPane {
     protected final Button start;
     protected final Button stop;
     protected final Button refresh;
+    protected final ScrollPane scroll1;
+    protected final ScrollPane scroll2;
     protected final AnchorPane onlineUsersPane;
     protected final Label onlineUsersTitle;
     protected final VBox onlineUsersBox;
@@ -25,7 +28,7 @@ public class FxmlStatisticsBase extends AnchorPane {
     protected final VBox statisticsBox;
     private int size1 = 0;
     private int size2 = 0;
-    
+
     private ServerSocketHandler server;
 
     public FxmlStatisticsBase() {
@@ -33,12 +36,35 @@ public class FxmlStatisticsBase extends AnchorPane {
         start = new Button();
         stop = new Button();
         refresh = new Button();
+        scroll1 = new ScrollPane();
+        scroll2 = new ScrollPane();
         onlineUsersPane = new AnchorPane();
         onlineUsersTitle = new Label();
         onlineUsersBox = new VBox();
         statisticsPane = new AnchorPane();
         statisticsTitle = new Label();
         statisticsBox = new VBox();
+
+        scroll1.setMaxHeight(USE_PREF_SIZE);
+        scroll1.setMaxWidth(USE_PREF_SIZE);
+        scroll1.setMinHeight(USE_PREF_SIZE);
+        scroll1.setMinWidth(USE_PREF_SIZE);
+        scroll1.setPrefHeight(43.0);
+        scroll1.setPrefWidth(329.0);
+        scroll1.setLayoutX(0.0);
+        scroll1.setLayoutY(24.0);
+        scroll1.setPrefHeight(298.0);
+        scroll1.setPrefWidth(329.0);
+
+        scroll2.setLayoutX(406.0);
+        scroll2.setPrefHeight(324.0);
+        scroll2.setPrefWidth(329.0);
+        scroll2.setLayoutY(0.0);
+        scroll2.setPrefHeight(31.0);
+        scroll2.setPrefWidth(329.0);
+        scroll2.setLayoutY(30.0);
+        scroll2.setPrefHeight(292.0);
+        scroll2.setPrefWidth(329.0);
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -73,7 +99,7 @@ public class FxmlStatisticsBase extends AnchorPane {
             start.setDisable(false);
             stop.setDisable(true);
         });
-        
+
         refresh.setId("refresh");
         refresh.setLayoutX(512.0);
         refresh.setLayoutY(435.0);
@@ -89,7 +115,7 @@ public class FxmlStatisticsBase extends AnchorPane {
         onlineUsersPane.setPrefHeight(324.0);
         onlineUsersPane.setPrefWidth(329.0);
 
-        onlineUsersTitle.setLayoutY(-6.0);
+        onlineUsersTitle.setLayoutY(0.0);
         onlineUsersTitle.setPrefHeight(39.0);
         onlineUsersTitle.setPrefWidth(329.0);
         onlineUsersTitle.setText("online users: ");
@@ -112,54 +138,64 @@ public class FxmlStatisticsBase extends AnchorPane {
         statisticsBox.setPrefHeight(292.0);
         statisticsBox.setPrefWidth(329.0);
 
+        onlineUsersPane.getChildren().add(onlineUsersTitle);
+        onlineUsersPane.getChildren().add(onlineUsersBox);
+        statisticsPane.getChildren().add(statisticsTitle);
+        statisticsPane.getChildren().add(statisticsBox);
+        scroll1.setContent(onlineUsersBox);
+        scroll2.setContent(statisticsBox);
+
         getChildren().add(start);
         getChildren().add(stop);
         getChildren().add(refresh);
-        onlineUsersPane.getChildren().add(onlineUsersTitle);
-        onlineUsersPane.getChildren().add(onlineUsersBox);
-        getChildren().add(onlineUsersPane);
-        statisticsPane.getChildren().add(statisticsTitle);
-        statisticsPane.getChildren().add(statisticsBox);
-        getChildren().add(statisticsPane);
-        
+        getChildren().add(scroll1);
+        getChildren().add(scroll2);
+
         setStatisticsBox();
 
     }
-    
+
     public void closeServerSocket() {
-        if (server != null)
+        if (server != null) {
             server.closeServer();
+        }
     }
-    
+
     public void setonlineUsersBox(String[] list) {
-        if (size1 != 0) {
+        if (size1 > 0) {
             onlineUsersBox.getChildren().remove(0, size1);
         }
         onlineUsersTitle.setText("online users: " + list.length);
         size1 = list.length;
-        for (String list1 : list) {
-            OnlineUserItemBase o = new OnlineUserItemBase();
-            o.setUserName(list1);
-            onlineUsersBox.getChildren().add(o);
+        if (size1 > 0) {
+            for (String list1 : list) {
+                OnlineUserItemBase o = new OnlineUserItemBase();
+                o.setUserName(list1);
+                onlineUsersBox.getChildren().add(o);
+            }
         }
     }
-    
+
     public void setStatisticsBox() {
-        if (size2 != 0) {
-            onlineUsersBox.getChildren().remove(0, size2);
+        if (size2 > 0) {
+            statisticsBox.getChildren().remove(0, size2);
         }
+
         ToDoController tdc = new ToDoController();
         ArrayList<ToDoEntity> list = tdc.findAll();
         size2 = list.size();
-        statisticsTitle.setText("todo lists: " + list.size());
-        for (int i = 0; i < list.size(); i++) {
-            TodoStatisticsItemBase item = new TodoStatisticsItemBase();
-            if (list.get(i).getStatus() == 0) {
-                item.setTodoLabel(list.get(i).getTitle() + " \t not finished");
-            } else {
-                item.setTodoLabel(list.get(i).getTitle() + "\t finished");
+        if (!list.isEmpty()) {
+            statisticsTitle.setText("todo lists: " + list.size());
+            for (int i = 0; i < list.size(); i++) {
+                TodoStatisticsItemBase item = new TodoStatisticsItemBase();
+                if (list.get(i).getStatus() == 0) {
+                    item.setTodoLabel(list.get(i).getTitle() + " \t not finished");
+                } else {
+                    item.setTodoLabel(list.get(i).getTitle() + "\t finished");
+                }
+                statisticsBox.getChildren().add(item);
             }
-            statisticsBox.getChildren().add(item);
         }
+
     }
 }
