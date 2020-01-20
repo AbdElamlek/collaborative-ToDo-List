@@ -7,10 +7,13 @@ package Handlers;
 
 import Connection.SocketHandler;
 import ControllerBase.ActionHandler;
+import DAOController.FriendRequestController;
 import DAOController.UserController;
 import Entities.EntityWrapper;
+import Entities.RequestEntity;
 import Entities.UserEntity;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.PrintStream;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,39 +26,70 @@ public class AddFriendHandler implements ActionHandler {
 
     @Override
     public void handleAction(String requestJsonObject, PrintStream printStream) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("MMM dd, yyyy h:mm:ss a").create();
+        FriendRequestController frc = new FriendRequestController();
+        UserController uc = new UserController();
         try {
-            
-            // Don't forget to update database first
-            
+
+            // Create json object
             JSONObject jsonObject = new JSONObject(requestJsonObject);
-            
-            // Get entity string from json.
-            String friendJson = jsonObject.getJSONObject("entity").toString();
-            // Reccieved entity.
-            // Convert string entity to entity object.
-            UserEntity friendEntity = gson.fromJson(friendJson, UserEntity.class);
-            // Get friend's id
-            int friendId = friendEntity.getId();
-            // Check if the client that has this id is online
-            boolean isOnline = false;
-            SocketHandler socketHandler = null;
-            for (int i = 0; i < SocketHandler.getOnlineIds().size(); i++) {
-                if (friendId == SocketHandler.getOnlineIds().get(i)) {
-                    isOnline = true;
-                    socketHandler = SocketHandler.socketHandlers.get(i);
+
+            // Get request entity string from json.
+            String requestEntityJson = jsonObject.getJSONObject("entity").toString();
+            RequestEntity requestEntity = gson.fromJson(requestEntityJson, RequestEntity.class);
+
+            // Insert request into friend request table. The result may be true
+            // or false if it true then the request is inserted, else the request
+            // is already exist
+            int receivedUserId = requestEntity.getReceivedUserId();
+            int sentUserId = requestEntity.getSentUserId();
+            int result = frc.isRequestExist(receivedUserId, sentUserId);
+            // The friend request is not exist
+            switch (result) {
+                case -1:
+                    frc.insert(requestEntity);
+                    // Check if the receiving user is online
+                    boolean isOnline = false;
+                    SocketHandler friendSocket = null;
+                    for (int i = 0; i < SocketHandler.getOnlineIds().size(); i++) {
+                        if (receivedUserId == SocketHandler.getOnlineIds().get(i)) {
+                            isOnline = true;
+                            friendSocket = SocketHandler.socketHandlers.get(i);
+                            break;
+                        }
+                    }   // If the friend is online send notification
+                    if (isOnline) {
+                        // send a notification to the online user
+                        EntityWrapper entityWrapper = new EntityWrapper("addFriend", "RequestEntity", requestEntity);
+                        String entityWrapperJson = gson.toJson(entityWrapper);
+                        friendSocket.printResponse(entityWrapperJson);
+                    }   break;
+                case 1:
+                    {
+                        // Request is already sent
+                        System.out.println("is alerady inserted");
+                        requestEntity.setId(-1);
+                        EntityWrapper entityWrapper
+                                = new EntityWrapper("addFriend", "RequestEntity", requestEntity);
+                        String entityWrapperJson = gson.toJson(entityWrapper);
+                        printStream.println(entityWrapperJson);
+                        break;
+                    }
+                case 0:
+                    {
+                        // Already have a friend request
+                        System.out.println("you already have a friend request");
+                        requestEntity.setId(-2);
+                        EntityWrapper entityWrapper
+                                = new EntityWrapper("addFriend", "RequestEntity", requestEntity);
+                        String entityWrapperJson = gson.toJson(entityWrapper);
+                        printStream.println(entityWrapperJson);
+                        break;
+                    }
+                default:
                     break;
-                }
             }
-            
-            // If the clinet is online
-            if (isOnline) {
-                UserController userController = new UserController();
-                UserEntity senterUser = userController.findById(socketHandler.getUserId());
-                EntityWrapper entityWrapper = new EntityWrapper("addFriend", "UserEntity", senterUser);
-                String entityWrapperString = gson.toJson(entityWrapper);
-                socketHandler.printResponse(entityWrapperString);
-            }
+
         } catch (JSONException ex) {
             System.out.println(ex);
         }

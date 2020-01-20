@@ -73,8 +73,10 @@ public class LoginHandler implements ActionHandler{
                     
                     for(ItemEntity item : todoItems){
                         ArrayList<TaskEntity> tasks = taskController.findByItemId(item.getId());
-                        for(TaskEntity task : tasks)
+                        for(TaskEntity task : tasks){
                             task.setCommentsList(commentController.findByTaskId(task.getId()));
+                            task.setAssignedUsersList(userController.findUsersAssignedToTask(task.getId()));
+                        }
                         item.setTasksList(tasks);
                     }
                     todo.setItemsList(todoItems);  

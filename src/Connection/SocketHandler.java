@@ -7,10 +7,12 @@ package Connection;
 
 import ControllerBase.ActionHandler;
 import Handlers.AcceptCollaboratorRequestHandler;
+import Handlers.AcceptFriendHandler;
 import Handlers.AcceptTaskHandler;
 import Handlers.AddCollaboratorRequestHandler;
 import Handlers.AddFriendHandler;
 import Handlers.AssignTaskHandler;
+import Handlers.DeclineFriendHandler;
 import Handlers.CommentCreationHandler;
 import Handlers.ItemCreationHandler;
 import Handlers.ItemDeleteHandler;
@@ -24,10 +26,11 @@ import Handlers.ToDoCreationHandler;
 import Handlers.ToDoDeleteHandler;
 import Handlers.ToDoUpdateHandler;
 import Handlers.RejectTaskHandler;
+import Handlers.SearchFriendHandler;
 import Handlers.TaskCreationHandler;
 import Handlers.TaskDeleteHandler;
 import Handlers.UpdateTaskStatusHandler;
-import Handlers.withdrawFromTaskHandler;
+import Handlers.WithdrawFromTaskHandler;
 import Handlers.LogoutHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -171,7 +174,7 @@ public class SocketHandler extends Thread {
                         actionHandler = new RejectTaskHandler();
                         break;
                     case "withdrawFromTask":
-                        actionHandler = new withdrawFromTaskHandler();
+                        actionHandler = new WithdrawFromTaskHandler();
                         break;
                     case "add collaborator request":
                         actionHandler = new AddCollaboratorRequestHandler();
@@ -204,9 +207,13 @@ public class SocketHandler extends Thread {
                     case "delete task":
                         actionHandler = new TaskDeleteHandler();
                         break;
+                    case "withdraw from task":
+                        actionHandler = new WithdrawFromTaskHandler();
+                        break;
                     case "add comment":
                         actionHandler = new CommentCreationHandler();
                         break;      
+
 
 
                 }
