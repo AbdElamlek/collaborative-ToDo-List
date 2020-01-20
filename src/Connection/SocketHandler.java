@@ -103,9 +103,10 @@ public class SocketHandler extends Thread {
                 
             } catch (IOException ex) {
                 //System.out.println("in catch");
-                //socketHandlers.remove(this);
+                socketHandlers.remove(this);
+                closeSocket();
                 //isRuning = false;
-                System.out.println(ex);
+                //System.out.println(ex);
             }
         }
     }

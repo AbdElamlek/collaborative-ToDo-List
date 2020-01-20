@@ -46,6 +46,8 @@ public class ItemCreationHandler implements ActionHandler{
             
             if(itemController.insert(item)){
                 String responseJsonObject = gson.toJson(new EntityWrapper("create item", "ItemEntity", item));
+                
+                System.out.println("--------------------------------item created----------"+responseJsonObject);
                 printStream.println(responseJsonObject);
                      int ownerId = toDoController.findById(item.getTodoId()).getOwnerId();
                      List<UserEntity> collaborators = userController.findAllListCollaborators(item.getTodoId());
