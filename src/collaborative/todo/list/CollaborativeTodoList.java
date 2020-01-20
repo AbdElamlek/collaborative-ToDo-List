@@ -45,14 +45,14 @@ public class CollaborativeTodoList extends Application {
     PreparedStatement pStatment;
     ResultSet rs;
     String queryString;
-    FXMLDocumentBase root;
+    FxmlStatisticsBase root;
     private double xOffset = 0; 
     private double yOffset = 0;
     
     @Override
     public void start(Stage stage) throws Exception {
  
-                root = new FXMLDocumentBase();
+                root = new FxmlStatisticsBase();
 
         root.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override

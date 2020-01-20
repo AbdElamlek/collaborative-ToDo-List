@@ -6,6 +6,7 @@
 package Connection;
 
 import ControllerBase.ActionHandler;
+import DAOController.UserController;
 import Handlers.AcceptCollaboratorRequestHandler;
 import Handlers.AcceptFriendHandler;
 import Handlers.AcceptTaskHandler;
@@ -87,12 +88,11 @@ public class SocketHandler extends Thread {
 
                 isRuning = true;
 
-                System.out.println("received json: "+recievedString);
+                System.out.println("received json: " + recievedString);
 
                 /*eman kamal*/
-                
                 handleResponse(recievedString);
-                
+
                 /*if(recievedString != null){
                     handleResponse(recievedString);
                     isRuning = true;
@@ -102,8 +102,7 @@ public class SocketHandler extends Thread {
                     isRuning = false;
 
                 }*/
-                /*eman kamal*/
-                
+ /*eman kamal*/
             } catch (IOException ex) {
                 //System.out.println("in catch");
                 //socketHandlers.remove(this);
@@ -122,16 +121,15 @@ public class SocketHandler extends Thread {
             JSONObject jsonObject = new JSONObject(jsonObjectStr);
             String action = jsonObject.getString("action");
 
-            if(action.equals("logout")){
+            if (action.equals("logout")) {
                 isRuning = false;
-                
+
                 actionHandler = new LogoutHandler();
                 actionHandler.handleAction(jsonObjectStr, output);
-                
+
                 closeSocket();
                 socketHandlers.remove(this);
-            }
-            else{
+            } else {
 
                 switch (action) {
                     case "signup":
@@ -139,7 +137,7 @@ public class SocketHandler extends Thread {
                         break;
                     case "logIn":
                         actionHandler = new LoginHandler();
-                        ((LoginHandler)actionHandler).assignUserIdToSocket(this::setUserId);
+                        ((LoginHandler) actionHandler).assignUserIdToSocket(this::setUserId);
                         break;
                     case "notification":
                         broadCast(jsonObjectStr);
@@ -196,20 +194,24 @@ public class SocketHandler extends Thread {
                         //broadCast(jsonObjectStr);
                         actionHandler = new ItemDeleteHandler();
                         break;
-
                     case "searchFriend":
                         actionHandler = new FriendHandler();
                         break;
                     case "addFriend":
                         actionHandler = new AddFriendHandler();
                         break;
+                    case "declineFriend":
+                        actionHandler = new DeclineFriendHandler();
+                        break;
+                    case "acceptFriend":
+                        actionHandler = new AcceptFriendHandler();
+                        break;
                     case "delete task":
                         actionHandler = new TaskDeleteHandler();
                         break;
                     case "add comment":
                         actionHandler = new CommentCreationHandler();
-                        break;      
-
+                        break;
 
                 }
                 actionHandler.handleAction(jsonObjectStr, output);
@@ -221,40 +223,50 @@ public class SocketHandler extends Thread {
     }
 
     /*Eman Kamal*/
-
-    
-    /*Reham*/
-    public void setUserId(int id){
+ /*Reham*/
+    public void setUserId(int id) {
         this.userId = id;
         System.out.println("i have got id: " + id);
     }
+
     /*Reham*/
 
  /*abd-elamelk */
     private void broadCast(String jsonResponse) {
-        for (SocketHandler socketH: socketHandlers){
+        for (SocketHandler socketH : socketHandlers) {
             socketH.output.println(jsonResponse);
         }
     }
+
     /*abd-elamelk */
-    
-    /* ahmedpro */
+
+ /* ahmedpro */
     public static List<Integer> getOnlineIds() {
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < socketHandlers.size(); i++)
+        for (int i = 0; i < socketHandlers.size(); i++) {
             list.add(socketHandlers.get(i).userId);
+        }
         return list;
     }
     
-    public void printResponse(String responsString) {
+    public static String[] getOnlineUsersName() {
+        UserController uc = new UserController();
+        String[] arr = new String[getOnlineIds().size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = uc.findById(getOnlineIds().get(i)).getUserName();
+        }
         
+        return arr;
+    }
+
+    public void printResponse(String responsString) {
+
         output.println(responsString);
     }
-    
+
     public int getUserId() {
         return userId;
     }
-    
-    /* ahmedpro */
 
+    /* ahmedpro */
 }
